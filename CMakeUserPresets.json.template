@@ -1,0 +1,54 @@
+{
+    // 此文件加入.gitignore
+    "version": 8,
+    "include": [
+        "CMakePresets.json"
+    ],
+    "configurePresets": [
+        {
+            "name": "linux-desktop",
+            "inherits": [
+                "x64-linux-gcc-base"
+            ],
+            "cacheVariables": {},
+            "environment": {
+                //"PATH": "D:/env/msys64/ucrt64/qt6-static/bin;d:/env/msys64/ucrt64/bin/;d:/env/msys64/usr/local/bin/;d:/env/msys64/usr/bin/;$penv{PATH}"
+            }
+        },
+        {
+            "name": "linux-arm64",
+            "inherits": [
+                "aarch64-linux-gnueabihf-base"
+            ],
+            "cacheVariables": {},
+            "environment": {
+                //"PATH": "D:/env/msys64/ucrt64/qt6-static/bin;d:/env/msys64/ucrt64/bin/;d:/env/msys64/usr/local/bin/;d:/env/msys64/usr/bin/;$penv{PATH}"
+            }
+        },
+        {
+            "name": "windows-desktop",
+            "inherits": [
+                "msvc-base"
+            ],
+            "cacheVariables": {},
+            "environment": {
+                //"PATH": "D:/env/msys64/ucrt64/qt6-static/bin;d:/env/msys64/ucrt64/bin/;d:/env/msys64/usr/local/bin/;d:/env/msys64/usr/bin/;$penv{PATH}"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "linux",
+            "configurePreset": "linux-desktop",
+            "configuration": "Debug",
+            "jobs": 12
+        },
+        {
+            "name": "build-linux-arm64",
+            "configurePreset": "linux-arm64",
+            "configuration": "Debug",
+            "jobs": 12
+        }
+    ],
+    "testPresets": []
+}

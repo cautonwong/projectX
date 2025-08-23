@@ -1,0 +1,158 @@
+{
+    "version": "0.2.0",
+    "inputs": [
+        {
+            "id": "projectDir",
+            "type": "pickString",
+            "description": "选择要调试的项目:",
+            "options": [
+                "periodic_job",
+                "htmx"
+            ]
+        }
+    ],
+    "configurations": [
+        {
+            "name": "(gdb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            // Resolved by CMake Tools:
+            //"program": "${workspaceFolder}/build/linux-x64/cmd/capabilities/Debug/${input:projectDir}",
+            "program": "${command:cmake.launchTargetPath}",
+            //"program": "/home/uv+/build/linux-x64/cmd/libevent/libevent_capabilities",
+            "args": [
+                //"https://www.example.com",
+                "https://httpbin.org/delay/5:3000"
+                //"www.baidu.com"
+            ],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    // add the directory where our target was built to the PATHs
+                    // it gets resolved by CMake Tools:
+                    "name": "PATH",
+                    "value": "${env:PATH}:${command:cmake.getLaunchTargetDirectory}"
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            //"miDebuggerPath":"/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "(lldb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            // Resolved by CMake Tools:
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    // add the directory where our target was built to the PATHs
+                    // it gets resolved by CMake Tools:
+                    "name": "PATH",
+                    "value": "${env:PATH}:${command:cmake.getLaunchTargetDirectory}"
+                },
+                {
+                    "name": "OTHER_VALUE",
+                    "value": "Something something"
+                }
+            ],
+            "externalConsole": true,
+            "MIMode": "lldb"
+        },
+        {
+            "name": "(msvc) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            // Resolved by CMake Tools:
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    // add the directory where our target was built to the PATHs
+                    // it gets resolved by CMake Tools:
+                    "name": "PATH",
+                    "value": "${env:PATH}:${command:cmake.getLaunchTargetDirectory}"
+                },
+                {
+                    "name": "OTHER_VALUE",
+                    "value": "Something something"
+                }
+            ],
+            "externalConsole": true
+        },
+        {
+            "name": "Debug arm-none-eabi",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/linux-arm-none-eabi/cmd/zephyr/zephyr/zephyr.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "external",
+            //"gdbPath": "gdb-multiarch",
+            "gdbPath": "arm-none-eabi-gdb",
+            "gdbTarget": "host.docker.internal:2331",
+            "device": "STM32F429IG",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "rtos": "auto",
+            "swoConfig": {
+                "swoPort": "2333"
+            },
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "label": "port0",
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            },
+            "preLaunchCommands": [
+                "set mem inaccessible-by-default off",
+                "monitor reset"
+            ],
+            "postLaunchCommands": [
+                "monitor reset init",
+                "monitor sleep 200"
+            ],
+            //"preLaunchTask": "Activate venv and build",
+            "showDevDebugOutput": "both"
+        },
+        {
+            "name": "Debug arm-linux-eabi",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/path/on/device/embedded_app", // 目标设备上的可执行文件路径
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "/path/on/device", // 目标设备上的工作目录
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/path/to/arm-linux-gnueabi-gdb", // 本地的 GDB
+            "miDebuggerServerAddress": "device-ip:2345", // 目标设备的 IP 和 GDB 端口
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build" // 调试前执行构建任务
+        }
+    ]
+}

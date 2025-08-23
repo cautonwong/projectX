@@ -1,0 +1,195 @@
+name: CMake on multiple platforms
+
+on:
+  push:
+    branches: [ "main" ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  PROJECT_NAME: ci
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # 本地编译 (Native Builds)
+          - os: ubuntu-latest
+            compiler_c: gcc
+            compiler_cxx: g++
+            system_name: Linux
+            toolchain: ${{ github.workspace }}/cmake/toolchains/x64-linux-gcc.cmake
+            build_name: "linux-gcc"
+          - os: ubuntu-latest
+            compiler_c: clang
+            compiler_cxx: clang++
+            system_name: Linux
+            toolchain: ${{ github.workspace }}/cmake/toolchains/x64-linux-clang.cmake
+            build_name: "linux-clang"
+          - os: windows-latest
+            compiler_c: cl
+            compiler_cxx: cl
+            system_name: Windows
+            build_name: "windows-msvc"
+          # 交叉编译 (Cross-compilation)
+          - os: ubuntu-latest
+            compiler_c: "aarch64-linux-gnu-gcc"
+            compiler_cxx: "aarch64-linux-gnu-g++"
+            system_name: Linux
+            toolchain: ${{ github.workspace }}/cmake/toolchains/x64-linux-gcc.cmake
+            system_processor: aarch64
+            build_name: "aarch64"
+          - os: ubuntu-latest
+            compiler_c: "arm-linux-gnueabihf-gcc"
+            compiler_cxx: "arm-linux-gnueabihf-g++"
+            system_name: Linux
+            system_processor: arm
+            build_name: "armhf"
+          - os: ubuntu-latest
+            compiler_c: "arm-none-eabi-gcc"
+            compiler_cxx: "arm-none-eabi-g++"
+            system_name: Generic
+            system_processor: arm
+            build_name: "arm-none-eabi-ubuntu"
+          - os: windows-latest
+            compiler_c: "arm-none-eabi-gcc"
+            compiler_cxx: "arm-none-eabi-g++"
+            system_name: Generic
+            system_processor: arm
+            build_name: "arm-none-eabi-windows"
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.strings.outputs.build-output-dir }}
+          key: build-${{ matrix.build_name }}-${{ hashFiles('**/CMakeLists.txt') }}
+
+      - name: Install cross-compilation toolchains (Ubuntu)
+        if: startsWith(matrix.os, 'ubuntu') && (startsWith(matrix.build_name, 'aarch64') || startsWith(matrix.build_name, 'armhf') || startsWith(matrix.build_name, 'arm-none-eabi'))
+        shell: bash
+        run: |
+          sudo apt-get update
+          if [ "${{ matrix.build_name }}" = "aarch64" ]; then
+            sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+          elif [ "${{ matrix.build_name }}" = "armhf" ]; then
+            sudo apt-get install -y gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf
+          elif [ "${{ matrix.build_name }}" = "arm-none-eabi-ubuntu" ]; then
+            sudo apt-get install -y gcc-arm-none-eabi
+          fi
+      
+      - name: Install cross-compilation toolchains (Windows)
+        if: startsWith(matrix.os, 'windows') && startsWith(matrix.build_name, 'arm-none-eabi')
+        shell: pwsh
+        run: |
+          # 方法1：使用 Chocolatey 安装（推荐）
+          choco install gcc-arm-embedded -y --no-progress
+          
+          # 方法2：如果方法1失败，使用直接下载安装
+          if (-not (Test-Path "C:\Program Files (x86)\GNU Arm Embedded Toolchain\*\bin\arm-none-eabi-gcc.exe")) {
+            Write-Host "Chocolatey安装失败，尝试直接下载..."
+            $url = "https://developer.arm.com/-/media/Files/downloads/gnu/12.3.rel1/binrel/arm-gnu-toolchain-12.3.rel1-mingw-w64-i686-arm-none-eabi.exe"
+            $installer = "$env:TEMP\arm-toolchain.exe"
+            Invoke-WebRequest -Uri $url -OutFile $installer
+            Start-Process -FilePath $installer -Args "/S /D=C:\arm-toolchain" -Wait
+            echo "C:\arm-toolchain\bin" | Out-File -FilePath $env:GITHUB_PATH -Append
+          } else {
+            # 找到已安装的工具链路径
+            $toolchainPath = (Get-Item "C:\Program Files (x86)\GNU Arm Embedded Toolchain\*\bin").FullName
+            echo "${toolchainPath}" | Out-File -FilePath $env:GITHUB_PATH -Append
+          }
+
+      - name: Configure CMake
+        if: (!startsWith(matrix.os, 'windows')) && matrix.compiler_c != 'cl'
+        shell: bash
+        run: |
+          build_dir="${{ steps.strings.outputs.build-output-dir }}"
+          workspace_dir="${{ github.workspace }}"
+
+          if [ "${{ matrix.system_name }}" = "Generic" ]; then
+            # 交叉编译到 Generic 平台（例如：arm-none-eabi）
+            cmake -B "$build_dir" \
+              -DCMAKE_TOOLCHAIN_FILE="$workspace_dir/cmake/toolchains/arm-none-eabi.cmake" \
+              -DCMAKE_BUILD_TYPE=Release \
+              -S "$workspace_dir"
+          elif [ "${{ matrix.os }}" = "windows-latest" ] && [ "${{ matrix.compiler_c }}" = "cl" ]; then
+            # Windows MSVC 本地编译
+            # 注意: MSVC 需要特殊的 shell 来配置环境，所以这个任务必须单独处理
+            echo "::error::MSVC configuration should be in a separate step due to environment setup."
+            exit 1
+          else
+            # 其他所有本地编译和交叉编译的情况
+            cmake -B "$build_dir" \
+              -DCMAKE_C_COMPILER="${{ matrix.compiler_c }}" \
+              -DCMAKE_CXX_COMPILER="${{ matrix.compiler_cxx }}" \
+              -DCMAKE_SYSTEM_NAME="${{ matrix.system_name }}" \
+              -DCMAKE_SYSTEM_PROCESSOR="${{ matrix.system_processor }}" \
+              -DCMAKE_BUILD_TYPE=Release \
+              -S "$workspace_dir"
+          fi
+
+      - name: Configure CMake (MSVC)
+        if: startsWith(matrix.os, 'windows') && matrix.compiler_c == 'cl'
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cmake -B "${{ steps.strings.outputs.build-output-dir }}" -DCMAKE_BUILD_TYPE=Release -S "${{ github.workspace }}"
+        
+      - name: Build
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config Release
+
+      - name: List build artifacts (Debug)
+        run: |
+          echo "Build directory contents:"
+          ls -R ${{ steps.strings.outputs.build-output-dir }}
+
+      - name: Test
+        if: matrix.system_name != 'Generic'
+        working-directory: ${{ steps.strings.outputs.build-output-dir }}
+        run: ctest --build-config Release
+
+      - name: Package artifacts (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          mkdir -p artifacts
+          cp ${{ steps.strings.outputs.build-output-dir }}/cmd/${{ env.PROJECT_NAME }} artifacts/
+          tar -czf ${{ env.PROJECT_NAME }}-${{ matrix.build_name }}.tar.gz -C artifacts ${{ env.PROJECT_NAME }}
+
+      - name: Package artifacts (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          mkdir -p artifacts
+          Copy-Item "${{ steps.strings.outputs.build-output-dir }}\cmd\Release\${{ env.PROJECT_NAME }}.exe" -Destination artifacts
+          Compress-Archive -Path artifacts\${{ env.PROJECT_NAME }}.exe -DestinationPath ${{ env.PROJECT_NAME }}-${{ matrix.build_name }}.zip
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PROJECT_NAME }}-${{ matrix.build_name }}
+          # 自动选择正确的文件
+          path: |
+            ${{ env.PROJECT_NAME }}-${{ matrix.build_name }}.tar.gz
+            ${{ env.PROJECT_NAME }}-${{ matrix.build_name }}.zip
+
+      - name: Release
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          # 自动选择正确的文件
+          files: |
+            ${{ env.PROJECT_NAME }}-${{ matrix.build_name }}.tar.gz
+            ${{ env.PROJECT_NAME }}-${{ matrix.build_name }}.zip

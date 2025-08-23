@@ -1,0 +1,134 @@
+{
+    "version": 8,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 20,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "Windows Host",
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "Linux Host",
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
+            "name": "base",
+            "displayName": "Base",
+            "description": "Base configuration for all builds",
+            "hidden": true,
+            "generator": "Ninja Multi-Config",
+            "cacheVariables": {
+                "CMAKE_MODULE_PATH":"${sourceDir}/cmake",
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo;MinSizeRel"
+            }
+        },
+        {
+            "name": "x64-linux-gcc-base",
+            "hidden": true,
+            "inherits": [
+                "Linux Host",
+                "base"
+            ],
+            "binaryDir": "${sourceDir}/build/linux-x64",
+            "installDir": "${sourceDir}/.local/linux-x64",
+            "cacheVariables": {
+                "CMAKE_PREFIX_PATH": "${sourceDir}/.local/linux-x64;${sourceDir}/.local/linux-x64/libuv",
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchains/x64-linux-gcc.cmake"
+            }
+        },
+        {
+            "name": "linux-arm-none-eabi-base",
+            "hidden": true,
+            "inherits": [
+                "Linux Host",
+                "base"
+            ],
+            "binaryDir": "${sourceDir}/build/linux-arm-none-eabi",
+            "installDir": "${sourceDir}/.local/linux-arm-none-eabi",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_CONFIGURATION_TYPES": "Debug",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchains/arm-none-eabi.cmake",
+                "CMAKE_SYSTEM_NAME": "Generic"
+            }
+        },
+        {
+            // windows host using arm-none-eabi-gcc 
+            "name": "windows-arm-none-eabi-base",
+            "hidden": true,
+            "inherits": [
+                "Windows Host",
+                "base"
+            ],
+            "binaryDir": "${sourceDir}/build/windows-arm-none-eabi",
+            "installDir": "${sourceDir}/.local/windows-arm-none-eabi",
+            "generator": "Ninja Multi-Config",
+            "cacheVariables": {
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo;MinSizeRel",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchains/arm-none-eabi.cmake",
+                "CMAKE_SYSTEM_NAME": "Generic"
+            }
+        },
+        {
+            "name": "aarch64-linux-gnueabihf-base",
+            "hidden": true,
+            "inherits": [
+                "Linux Host",
+                "base"
+            ],
+            "binaryDir": "${sourceDir}/build/aarch64-linux-gnueabihf",
+            "installDir": "${sourceDir}/.local/aarch64-linux-gnueabihf",
+            "generator": "Ninja Multi-Config",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchains/aarch64-linux-gnueabihf.cmake",
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo;MinSizeRel"
+            }
+        },
+        {
+            "name": "msvc-base",
+            "hidden": true,
+            "inherits": [
+                "Windows Host",
+                "base"
+            ],
+            "binaryDir": "${sourceDir}/build/msvc",
+            "installDir": "${sourceDir}/.local/msvc",
+            "generator": "Ninja Multi-Config",
+            "cacheVariables": {
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo;MinSizeRel",
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/msvc.cmake"
+            }
+        }
+    ],
+    "buildPresets": [],
+    "testPresets": [
+        {
+            "name": "test-common",
+            "description": "Test CMake settings that apply to all configurations",
+            "hidden": true,
+            "configuration": "Debug",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        }
+    ]
+}

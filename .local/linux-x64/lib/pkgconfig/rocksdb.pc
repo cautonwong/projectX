@@ -1,0 +1,10 @@
+prefix="/home/uv+/.local/linux-x64"
+includedir="${prefix}/include"
+libdir="${prefix}/lib"
+
+Name: rocksdb
+Description: An embeddable persistent key-value store for fast storage
+URL: https://rocksdb.org/
+Version: 10.6.0
+Cflags: -I"${includedir}"
+Libs: -L"${libdir}" -lrocksdb

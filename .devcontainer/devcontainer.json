@@ -1,0 +1,22 @@
+{
+    "name": "Dev Container",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "extensions": [
+        "vscjava.vscode-java-pack",
+        "rust-lang.rust",
+        "ms-vscode.cpptools",
+        "golang.go",
+        "ms-vscode.vscode-node-azure-pack",
+        "ms-azuretools.vscode-docker",
+        "ms-vscode.cmake-tools",
+        "ms-python.python"
+    ],
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "python.pythonPath": "/usr/bin/python3"
+    },
+    "remoteUser": "root"
+}

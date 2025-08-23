@@ -1,0 +1,51 @@
+name: Zephyr Build with CPM
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/zephyrproject-rtos/ci-repo-cache:v0.27.4.20241026
+      options: --entrypoint /bin/bash
+
+    steps:
+      # 检出代码库
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 设置 Zephyr 环境
+      - name: Setup Zephyr Environment
+        run: |
+          echo "ZEPHYR_SDK_INSTALL_DIR=/opt/toolchains/zephyr-sdk-$(cat SDK_VERSION)" >> $GITHUB_ENV
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          pip install --user west
+          west init -m https://github.com/zephyrproject-rtos/zephyr --mr main zephyr-workspace
+          cd zephyr-workspace
+          west update
+          pip install -r zephyr/scripts/requirements.txt
+
+      # 使用 CPM 拉取 Zephyr 依赖
+      - name: Fetch Dependencies with CPM
+        run: |
+          mkdir -p build
+          cd build
+          cmake -B . -S ../ -DCPM_SOURCE_CACHE=$HOME/.cache/cpm
+          cmake --build .
+
+      # 编译 Zephyr 应用程序
+      - name: Build Zephyr Application
+        run: |
+          cd zephyr-workspace
+          west build -p auto -b qemu_x86 zephyr/samples/hello_world
+          # 替换 `qemu_x86` 为目标板卡，例如 `nucleo_f767zi`
+
+      # （可选）运行测试
+      - name: Run Tests
+        run: |
+          cd zephyr-workspace
+          west build -t run

@@ -1,0 +1,14 @@
+server:
+  address: "0.0.0.0:8080"
+
+mqtt:
+  broker: "tcp://localhost:1883"
+  client_id: "edge-processor-go"
+  topic: "sensors/#"
+
+database:
+  filepath: "/workspaces/projectX/go/data/edge.db" # This path is inside the container
+
+processor:
+  num_workers: 4
+  queue_size: 1000

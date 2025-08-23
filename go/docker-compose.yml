@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  mqtt-broker:
+    image: eclipse-mosquitto:2
+    container_name: mqtt_broker
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    restart: unless-stopped
+
+  go-processor:
+    build: .
+    container_name: go_processor
+    depends_on:
+      - mqtt-broker
+    ports:
+      - "8080:8080"
+    volumes:
+      - edgedata:/data # Use a named volume for the database
+    environment:
+      # You can override config.yml settings with environment variables
+      # Example: V_SERVER_ADDRESS: "0.0.0.0:9090"
+      V_MQTT_BROKER: "tcp://mqtt-broker:1883" # Ensure it uses the service name
+    restart: unless-stopped
+
+volumes:
+  edgedata:

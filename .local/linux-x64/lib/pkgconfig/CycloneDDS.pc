@@ -1,0 +1,9 @@
+prefix=/home/uv+/.local/linux-x64
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: CycloneDDS
+Description: Eclipse Cyclone DDS library
+Version: 0.11.0
+Libs: -L${libdir} -lddsc
+Cflags: -I${includedir}

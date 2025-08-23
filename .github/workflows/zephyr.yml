@@ -1,0 +1,37 @@
+name: Build Zephyr App with CPM
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout application code
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake ninja-build g++-multilib libstdc++-10-dev python3-pip
+
+    - name: Install west
+      run: pip3 install west
+
+    - name: Initialize west for modules
+      run: |
+        # CPM will fetch Zephyr itself. We initialize west in the build directory
+        # to handle modules based on the west.yml from the CPM-fetched Zephyr.
+        mkdir build && cd build
+        cmake .. -GNinja
+        cd ..
+        west init -l build/_deps/zephyr-src
+        west update
+
+    - name: Build the application
+      run: |
+        west build -b native_sim build
