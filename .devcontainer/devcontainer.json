@@ -6,13 +6,14 @@
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     "extensions": [
         "vscjava.vscode-java-pack",
-        "rust-lang.rust",
+        "rust-lang.rust-analyzer",
         "ms-vscode.cpptools",
         "golang.go",
         "ms-vscode.vscode-node-azure-pack",
         "ms-azuretools.vscode-docker",
         "ms-vscode.cmake-tools",
-        "ms-python.python"
+        "ms-python.python",
+        "marus25.cortex-debug"
     ],
     "settings": {
         "terminal.integrated.shell.linux": "/bin/bash",

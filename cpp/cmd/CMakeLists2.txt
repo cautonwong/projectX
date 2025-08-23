@@ -1,0 +1,61 @@
+cmake_minimum_required(VERSION 3.10)
+project(libmsx-microservices)
+
+find_package(libmsx REQUIRED)
+# 数据中心服务
+add_executable(core-data
+    core-data.c
+)
+target_link_libraries(core-data
+    msx
+)
+
+# 命令中心服务
+add_executable(core-command
+    core-command.c
+)
+target_link_libraries(core-command
+    msx
+)
+
+# 南向设备管理服务
+add_executable(south
+    south.c
+)
+target_link_libraries(south
+    msx
+)
+
+# 北向通信管理服务
+add_executable(north
+    north.c
+)
+target_link_libraries(north
+    msx
+)
+
+# web ui 服务 使用tailwindcss+htmx
+add_executable(web-ui
+    web-ui.c
+)
+target_link_libraries(web-ui
+    msx
+)
+
+# desktop ui 服务 使用imgui 用于虚拟化设备
+add_executable(desktop-ui
+    desktop-ui.c
+)
+target_link_libraries(desktop-ui
+    msx
+)
+
+# 日志管理服务 
+add_executable(logger
+    logger.c
+)
+target_link_libraries(logger
+    msx
+)
+
+# install和release相关

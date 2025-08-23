@@ -153,6 +153,36 @@
                 }
             ],
             "preLaunchTask": "Build" // 调试前执行构建任务
+        },
+        {
+            "name": "Launch Go Program",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${fileDirname}",
+            "env": {},
+            "args": []
+        },
+        {
+            "name": "Debug Rust",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/target/debug/your_program_name",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Debug Java",
+            "type": "java",
+            "request": "launch",
+            "mainClass": "your_main_class",
+            "projectName": "your_project_name"
+        },
+        {
+            "name": "Debug Node.js",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/app.js"
         }
     ]
 }

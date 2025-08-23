@@ -56,3 +56,4 @@ CMakeUserPresets.json
 .venv/
 build/
 vendor/
+docs/
