@@ -56,5 +56,5 @@ list(APPEND CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/.local/${PLATFORM}-${ARCH}"
 #add_subdirectory(cmd)
 #add_subdirectory(third-party/libmsx)
 #add_subdirectory(cmd/firmware/boilerplate)
-add_subdirectory(src)
-add_subdirectory(cmd/microservice/core-data)
+#add_subdirectory(src)
+#add_subdirectory(cmd/microservice/core-data)

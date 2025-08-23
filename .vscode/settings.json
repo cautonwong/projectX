@@ -18,12 +18,16 @@
         // 启用 Clang-Tidy 以提供「静态检查」
         "--clang-tidy",
         //"--header-insertion=iwyu",
-        "--header-insertion-decorators",
+        //"--header-insertion-decorators",
+        "--header-insertion=never",
         "-j=12", /// 同时开启的任务数量
         "--pch-storage=disk", /// pch优化的位置
         "--background-index"
     ], // 可选，添加其他clangd参数
-    "files.associations": {},
+    "files.associations": {
+        "*.c": "c",
+        "*.h": "c",
+    },
     "git.ignoreLimitWarning": true,
     "mcu-debug.rtos-views.showRTOS": false
 }

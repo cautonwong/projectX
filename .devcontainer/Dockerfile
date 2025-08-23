@@ -8,6 +8,24 @@ RUN sed -i.bak 's|http://archive.ubuntu.com/ubuntu/|http://mirrors.aliyun.com/ub
 RUN apt-get update && apt-get install -y \
     build-essential cmake ninja-build gdb git curl unzip wget sudo software-properties-common \
     openjdk-17-jdk maven gradle \
+    device-tree-compiler \
+    gperf \
+    ccache \
+    dfu-util \
+    device-tree-compiler \
+    python3-dev \
+    python3-pip \
+    python3-setuptools \
+    python3-tk \
+    python3-wheel \
+    xz-utils \
+    file \
+    make \
+    gcc \
+    clangd \
+    gcc-multilib \
+    g++-multilib \
+    libsdl2-dev \    
     python3.11 python3-pip python3-venv \
     && rm -rf /var/lib/apt/lists/*
 

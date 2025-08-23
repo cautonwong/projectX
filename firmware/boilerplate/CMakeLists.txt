@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 # --- CPM.cmake setup ---
 # Include CPM.cmake script. You can either add it to your repository or download it on the fly.
 # This example downloads it if not found.
+if(0)
 set(CPM_DOWNLOAD_LOCATION "${CMAKE_BINARY_DIR}/cpm/CPM.cmake")
 if(NOT EXISTS ${CPM_DOWNLOAD_LOCATION})
     message(STATUS "Downloading CPM.cmake...")
@@ -25,6 +26,7 @@ CPMAddPackage(
 # The source directory is available in the variable `zephyr_SOURCE_DIR`.
 set(ZEPHYR_BASE ${zephyr_SOURCE_DIR})
 message(STATUS "ZEPHYR_BASE set to: ${ZEPHYR_BASE}")
+endif()
 
 # --- Standard Zephyr application setup ---
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
