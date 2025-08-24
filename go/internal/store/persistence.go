@@ -28,6 +28,23 @@ func NewPersistence(dbpath string) (*Persistence, error) {
 	}
 
 	createTableSQL := `
+    CREATE TABLE IF NOT EXISTS devices (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL UNIQUE,
+        description TEXT,
+        topic_prefix TEXT NOT NULL UNIQUE,
+        created_at DATETIME NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS device_parameters (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        device_id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        value TEXT NOT NULL,
+        attributes TEXT,
+        created_at DATETIME NOT NULL,
+        updated_at DATETIME NOT NULL,
+        FOREIGN KEY (device_id) REFERENCES devices (id) ON DELETE CASCADE
+    );
     CREATE TABLE IF NOT EXISTS sensor_readings (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         topic TEXT NOT NULL,
@@ -154,4 +171,146 @@ func (p *Persistence) QueryReadings(topic string, limit int, start, end time.Tim
 func (p *Persistence) Close() {
 	close(p.WriteQueue)
 	p.db.Close()
+}
+
+func (p *Persistence) CreateDevice(device *Device) error {
+	stmt, err := p.db.Prepare("INSERT INTO devices (name, description, topic_prefix, created_at) VALUES (?, ?, ?, ?)")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(device.Name, device.Description, device.TopicPrefix, time.Now())
+	if err != nil {
+		return err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return err
+	}
+	device.ID = int(id)
+	return nil
+}
+
+func (p *Persistence) GetDevice(id int) (*Device, error) {
+	row := p.db.QueryRow("SELECT id, name, description, topic_prefix, created_at FROM devices WHERE id = ?", id)
+	device := &Device{}
+	err := row.Scan(&device.ID, &device.Name, &device.Description, &device.TopicPrefix, &device.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+	return device, nil
+}
+
+func (p *Persistence) GetDevices() ([]Device, error) {
+	rows, err := p.db.Query("SELECT id, name, description, topic_prefix, created_at FROM devices")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var devices []Device
+	for rows.Next() {
+		device := Device{}
+		err := rows.Scan(&device.ID, &device.Name, &device.Description, &device.TopicPrefix, &device.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		devices = append(devices, device)
+	}
+	return devices, nil
+}
+
+func (p *Persistence) UpdateDevice(device *Device) error {
+	stmt, err := p.db.Prepare("UPDATE devices SET name = ?, description = ?, topic_prefix = ? WHERE id = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(device.Name, device.Description, device.TopicPrefix, device.ID)
+	return err
+}
+
+func (p *Persistence) DeleteDevice(id int) error {
+	stmt, err := p.db.Prepare("DELETE FROM devices WHERE id = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(id)
+	return err
+}
+
+func (p *Persistence) CreateDeviceParameter(parameter *DeviceParameter) error {
+	stmt, err := p.db.Prepare("INSERT INTO device_parameters (device_id, name, value, attributes, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(parameter.DeviceID, parameter.Name, parameter.Value, parameter.Attributes, time.Now(), time.Now())
+	if err != nil {
+		return err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return err
+	}
+	parameter.ID = int(id)
+	return nil
+}
+
+func (p *Persistence) GetDeviceParameter(deviceId int, name string) (*DeviceParameter, error) {
+	row := p.db.QueryRow("SELECT id, device_id, name, value, attributes, created_at, updated_at FROM device_parameters WHERE device_id = ? AND name = ?", deviceId, name)
+	parameter := &DeviceParameter{}
+	err := row.Scan(&parameter.ID, &parameter.DeviceID, &parameter.Name, &parameter.Value, &parameter.Attributes, &parameter.CreatedAt, &parameter.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
+	return parameter, nil
+}
+
+func (p *Persistence) GetDeviceParameters(deviceId int) ([]DeviceParameter, error) {
+	rows, err := p.db.Query("SELECT id, device_id, name, value, attributes, created_at, updated_at FROM device_parameters WHERE device_id = ?", deviceId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var parameters []DeviceParameter
+	for rows.Next() {
+		parameter := DeviceParameter{}
+		err := rows.Scan(&parameter.ID, &parameter.DeviceID, &parameter.Name, &parameter.Value, &parameter.Attributes, &parameter.CreatedAt, &parameter.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		parameters = append(parameters, parameter)
+	}
+	return parameters, nil
+}
+
+func (p *Persistence) UpdateDeviceParameter(parameter *DeviceParameter) error {
+	stmt, err := p.db.Prepare("UPDATE device_parameters SET value = ?, attributes = ?, updated_at = ? WHERE id = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(parameter.Value, parameter.Attributes, time.Now(), parameter.ID)
+	return err
+}
+
+func (p *Persistence) DeleteDeviceParameter(id int) error {
+	stmt, err := p.db.Prepare("DELETE FROM device_parameters WHERE id = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(id)
+	return err
 }

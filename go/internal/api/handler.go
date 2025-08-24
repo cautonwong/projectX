@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"projectX.com/internal/store"
+	"projectX.com/internal/web"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -15,6 +16,7 @@ import (
 type Handlers struct {
 	memStore *store.MemoryStore
 	dbStore  *store.Persistence
+	wsHub    *web.Hub
 }
 
 func (h *Handlers) HandleHealthCheck(w http.ResponseWriter, r *http.Request) {

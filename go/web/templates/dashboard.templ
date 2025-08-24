@@ -1,0 +1,20 @@
+package templates
+
+templ Dashboard() {
+    @BaseLayout("Edge Dashboard") {
+        <div class="container-fluid p-4">
+            <h1 class="mb-4">Edge Device Dashboard</h1>
+            <div id="dashboard-grid" hx-get="/ui/sensor-cards" hx-trigger="load" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <!-- Sensor cards will be loaded here -->
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Placeholder Sensor</h5>
+                            <p class="card-text">Waiting for data...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

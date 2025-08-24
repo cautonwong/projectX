@@ -3,7 +3,9 @@
     "build": {
         "dockerfile": "Dockerfile"
     },
+    //"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,consistency=cached",    
     "extensions": [
         "vscjava.vscode-java-pack",
         "rust-lang.rust-analyzer",

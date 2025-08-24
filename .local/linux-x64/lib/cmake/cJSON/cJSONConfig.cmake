@@ -2,8 +2,8 @@
 set(CJSON_UTILS_FOUND OFF)
 
 # The include directories used by cJSON
-set(CJSON_INCLUDE_DIRS "/home/uv+/.local/linux-x64/include")
-set(CJSON_INCLUDE_DIR "/home/uv+/.local/linux-x64/include")
+set(CJSON_INCLUDE_DIRS "/workspaces/projectX/.local/linux-x64/include")
+set(CJSON_INCLUDE_DIR "/workspaces/projectX/.local/linux-x64/include")
 
 get_filename_component(_dir "${CMAKE_CURRENT_LIST_FILE}" PATH)
 

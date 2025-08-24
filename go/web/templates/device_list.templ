@@ -1,0 +1,28 @@
+package templates
+
+import (
+    "projectX.com/internal/store"
+    "fmt"
+)
+
+templ DeviceList(devices []store.Device) {
+    for _, device := range devices {
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{ device.Name }</h5>
+                    <p class="card-text">{ device.Description }</p>
+                    <p class="card-text"><small class="text-muted">{ device.TopicPrefix }</small></p>
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="button" class="btn btn-sm btn-warning me-2" data-bs-toggle="modal" data-bs-target="#deviceModal" hx-get={ fmt.Sprintf("/ui/devices/%d/edit", device.ID) } hx-target="#modal-content" hx-swap="innerHTML">
+                            Edit
+                        </button>
+                        <button hx-delete={ fmt.Sprintf("/ui/devices/%d", device.ID) } hx-target="#device-list" hx-swap="outerHTML" class="btn btn-sm btn-danger">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

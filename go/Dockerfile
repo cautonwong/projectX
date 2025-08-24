@@ -27,6 +27,9 @@ COPY --from=builder /edge-processor .
 # Copy the configuration file
 COPY config.yml .
 
+# Copy the web UI files
+COPY web ./web
+
 # This directory will be mounted as a volume to persist the database
 RUN mkdir /data
 

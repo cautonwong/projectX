@@ -24,10 +24,6 @@
         "--pch-storage=disk", /// pch优化的位置
         "--background-index"
     ], // 可选，添加其他clangd参数
-    "files.associations": {
-        "*.c": "c",
-        "*.h": "c",
-    },
     "git.ignoreLimitWarning": true,
     "mcu-debug.rtos-views.showRTOS": false
 }

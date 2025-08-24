@@ -14,6 +14,7 @@ import (
 	"projectX.com/internal/core"
 	"projectX.com/internal/mqtt"
 	"projectX.com/internal/store"
+	"projectX.com/internal/web"
 
 	paho "github.com/eclipse/paho.mqtt.golang"
 )
@@ -37,8 +38,11 @@ func main() {
 
 	memStore := store.NewMemoryStore()
 
+	wsHub := web.NewHub()
+	go wsHub.Run()
+
 	core.MainWorkQueue = make(chan paho.Message, cfg.Processor.QueueSize)
-	core.StartConcurrentProcessor(cfg, pStore, memStore)
+	core.StartConcurrentProcessor(cfg, pStore, memStore, wsHub)
 	slog.Info("Core processor workers started")
 
 	mqttClient := mqtt.NewClient(cfg, core.MainWorkQueue)
@@ -48,7 +52,7 @@ func main() {
 	}
 	mqttClient.Subscribe()
 
-	apiServer := api.NewServer(cfg, memStore, pStore)
+	apiServer := api.NewServer(cfg, memStore, pStore, wsHub, mqttClient)
 	go func() {
 		slog.Info("Starting API server", "address", cfg.Server.Address)
 		if err := apiServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {

@@ -45,7 +45,7 @@
             "binaryDir": "${sourceDir}/build/linux-x64",
             "installDir": "${sourceDir}/.local/linux-x64",
             "cacheVariables": {
-                "CMAKE_PREFIX_PATH": "${sourceDir}/.local/linux-x64;${sourceDir}/.local/linux-x64/libuv",
+                "CMAKE_PREFIX_PATH": "${sourceDir}/.local/linux-x64",
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchains/x64-linux-gcc.cmake"

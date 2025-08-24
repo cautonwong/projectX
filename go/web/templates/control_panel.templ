@@ -1,0 +1,15 @@
+package templates
+
+import "fmt"
+
+templ ControlPanel(topic string) {
+    <div class="mt-4">
+        <button 
+            hx-post={ fmt.Sprintf("/ui/control/%s", topic) }
+            hx-swap="none"
+            class="btn btn-primary"
+        >
+            Ping Device
+        </button>
+    </div>
+}

@@ -159,7 +159,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${fileDirname}",
+            "program": "${workspaceFolder}/go/cmd/main.go",
             "env": {},
             "args": []
         },
@@ -172,11 +172,11 @@
             "cwd": "${workspaceFolder}"
         },
         {
-            "name": "Debug Java",
+            "name": "Debug Java Main",
             "type": "java",
             "request": "launch",
-            "mainClass": "your_main_class",
-            "projectName": "your_project_name"
+            "mainClass": "com.example.Main",
+            "projectName": "projectX"
         },
         {
             "name": "Debug Node.js",

@@ -57,3 +57,5 @@ CMakeUserPresets.json
 build/
 vendor/
 docs/
+node_modules/
+*_templ.go

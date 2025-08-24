@@ -1,0 +1,19 @@
+package templates
+
+import (
+    "projectX.com/internal/store"
+    "fmt"
+)
+
+templ SensorCard(reading store.SensorReading) {
+    <div id={ fmt.Sprintf("sensor-%s", reading.Topic) } class="col">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{ reading.Topic }</h5>
+                <p class="card-text display-4">{ fmt.Sprintf("%.2f %s", reading.Value, reading.Unit) }</p>
+                <p class="card-text"><small class="text-muted">{ reading.Timestamp.Format("2006-01-02 15:04:05") }</small></p>
+                @ControlPanel(reading.Topic)
+            </div>
+        </div>
+    </div>
+}

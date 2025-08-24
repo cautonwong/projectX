@@ -39,22 +39,22 @@ else()
     set(ARCH "x86")
 endif()
 set(LOCAL_PREFIX_PATH "${PROJECT_SOURCE_DIR}/.local")
-set(OPENSSL_ROOT_DIR "/usr")
-set(OPENSSL_CRYPTO_LIBRARY "/usr/lib/x86_64-linux-gnu/libcrypto.so")
-set(OPENSSL_SSL_LIBRARY "/usr/lib/x86_64-linux-gnu/libssl.so")
+#set(OPENSSL_ROOT_DIR "/usr")
+#set(OPENSSL_CRYPTO_LIBRARY "/usr/lib/x86_64-linux-gnu/libcrypto.so")
+#set(OPENSSL_SSL_LIBRARY "/usr/lib/x86_64-linux-gnu/libssl.so")
 
 set(ZLIB_ROOT_DIR "/usr")
 set(ZLIB_LIBRARY "/usr/lib/x86_64-linux-gnu/libz.so")
 set(ZLIB_INCLUDE_DIR "/usr/include")
-set(CMAKE_PREFIX_PATH 
-    ${LOCAL_PREFIX_PATH}/${PLATFORM}-${ARCH}/libyaml
+#set(CMAKE_PREFIX_PATH 
+    #${LOCAL_PREFIX_PATH}/${PLATFORM}-${ARCH}/libyaml
     #${LOCAL_PREFIX_PATH}/${PLATFORM}-${ARCH}/Libevent
    #${LOCAL_PREFIX_PATH}/${PLATFORM}-${ARCH}/libuv
-    ${CMAKE_PREFIX_PATH}
-)
+    #${CMAKE_PREFIX_PATH}
+#)
 list(APPEND CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/.local/${PLATFORM}-${ARCH}")
+message(STATUS ${PROJECT_SOURCE_DIR})
 #add_subdirectory(cmd)
 #add_subdirectory(third-party/libmsx)
 #add_subdirectory(cmd/firmware/boilerplate)
-#add_subdirectory(src)
-#add_subdirectory(cmd/microservice/core-data)
+add_subdirectory(microservice)

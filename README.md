@@ -41,3 +41,8 @@ north: 北向主站 调用北向主站通信协议 IPC给core-data和core-comman
 core-data: 数据中心 注册中心
 core-command: 从北往南的命令(点抄或者阻塞式的设备控制)
 ```
+
+```json
+"workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,consistency=cached",
+"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
+```

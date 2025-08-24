@@ -67,3 +67,8 @@ func (c *Client) Subscribe() {
 func (c *Client) Disconnect(quiesce uint) {
 	c.client.Disconnect(quiesce)
 }
+
+func (c *Client) Publish(topic string, payload interface{}) error {
+	token := c.client.Publish(topic, 0, false, payload)
+	return token.Error()
+}

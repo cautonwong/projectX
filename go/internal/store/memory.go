@@ -27,3 +27,13 @@ func (ms *MemoryStore) GetValue(topic string) (SensorReading, bool) {
 	val, ok := ms.values[topic]
 	return val, ok
 }
+
+func (ms *MemoryStore) GetAllValues() []SensorReading {
+	ms.mu.RLock()
+	defer ms.mu.RUnlock()
+	readings := make([]SensorReading, 0, len(ms.values))
+	for _, reading := range ms.values {
+		readings = append(readings, reading)
+	}
+	return readings
+}

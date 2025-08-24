@@ -1,5 +1,5 @@
-libdir=/home/uv+/.local/linux-x64/lib
-includedir=/home/uv+/.local/linux-x64/include
+libdir=/workspaces/projectX/.local/linux-x64/lib
+includedir=/workspaces/projectX/.local/linux-x64/include
 
 Name: libcjson
 Version: 1.7.18
