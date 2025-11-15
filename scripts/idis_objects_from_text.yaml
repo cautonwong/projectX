@@ -1,0 +1,944 @@
+- group: Uncategorized
+  name: SAP Assignment
+  class_id: 17
+  version: 0
+  obis_code: '0xFC00'
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000290000FF" Get -- Get'
+  - index: 2
+    name: SAP_assignment_list
+    attribute_type: asslist_type
+    default_value: 0x08 {{1, *}} Get -- Get One logical device, Server SAP 1
+  - index: 1
+    name: connect_logical_device
+    attribute_type: '0x20'
+    default_value: -- -- --
+  methods: []
+- group: Uncategorized
+  name: Current association
+  class_id: 15
+  version: 3
+  obis_code: 0-0:40.0.0.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000280000FF" Get -- Get'
+  - index: 2
+    name: object_list
+    attribute_type: object_list_type
+    default_value: 0x08 Get -- Get
+  - index: 3
+    name: associated_partners_id
+    attribute_type: associated_partners_type 0x10
+    default_value: Get -- Get
+  - index: 4
+    name: application_context_name
+    attribute_type: application_context_name 0x18
+    default_value: Get -- Get
+  - index: 5
+    name: xDLMS_context_info
+    attribute_type: xDLMS_context_type
+    default_value: 0x20 Get -- Get
+  - index: 6
+    name: authentication_mechanism_name mechanism_name_structure 0x28
+    attribute_type: Get --
+    default_value: Get, (Set) Optionally Set can be used to restrict the next association to a specific
+  - index: 7
+    name: secret
+    attribute_type: octet_string
+    default_value: 0x30 -- -- (Set) In case of using LLS one can use attr 7 of Current Assoc. to change the LLS PW
+  - index: 8
+    name: association_status
+    attribute_type: enum
+    default_value: 0x38 Get -- Get
+  - index: 9
+    name: security_setup_reference
+    attribute_type: octet_string[6]
+    default_value: 0x40 "00002B0000FF" Get -- Get
+  - index: 10
+    name: user_list
+    attribute_type: array
+    default_value: 0x48 Get -- Get
+  - index: 11
+    name: current_user
+    attribute_type: struct(unsigned,visible_string) 0x50
+    default_value: Get -- Get
+  - index: 1
+    name: reply_to_HLS_authentication
+    attribute_type: '0x60'
+    default_value: -- -- Action
+  - index: 2
+    name: change_HLS_secret
+    attribute_type: '0x68'
+    default_value: -- -- (Action) For changing the HLS secret in case of using MD5 or SHA-1
+  - index: 3
+    name: add_object
+    attribute_type: '0x70'
+    default_value: -- -- --
+  - index: 4
+    name: remove_object
+    attribute_type: '0x78'
+    default_value: -- -- --
+  - index: 5
+    name: add_user
+    attribute_type: '0x80'
+    default_value: -- -- --
+  - index: 6
+    name: remove_user
+    attribute_type: '0x88'
+    default_value: -- -- --
+  methods: []
+- group: Uncategorized
+  name: Security setup
+  class_id: 64
+  version: 1
+  obis_code: 0-0:43.0.0.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00002B0000FF" -- -- Get'
+  - index: 2
+    name: security_policy
+    attribute_type: enum
+    default_value: 0x08 -- -- Get,Set
+  - index: 3
+    name: security_suite
+    attribute_type: enum
+    default_value: 0x10 0 -- -- Get,Set 0 = AES-GCM-128/AES-128
+  - index: 4
+    name: client_system_title
+    attribute_type: octet_string[8]
+    default_value: 0x18 -- -- Get
+  - index: 5
+    name: server_system_title
+    attribute_type: octet_string[8]
+    default_value: 0x20 -- -- Get
+  - index: 6
+    name: certificates
+    attribute_type: octet_string[8]
+    default_value: 0x28 -- -- Get
+  - index: 1
+    name: security_activate
+    attribute_type: enum
+    default_value: 0x30 -- -- Action
+  - index: 2
+    name: global_key_transfer
+    attribute_type: key_data
+    default_value: 0x38 -- -- Action
+  - index: 3
+    name: key_agreement
+    attribute_type: key_data
+    default_value: 0x40 -- -- Action
+  - index: 4
+    name: generate_key_pair
+    attribute_type: key_data
+    default_value: 0x48 -- -- Action
+  - index: 5
+    name: generate_certificate_request key_data
+    attribute_type: '0x50'
+    default_value: -- -- Action
+  - index: 6
+    name: import_certificate
+    attribute_type: key_data
+    default_value: 0x58 -- -- Action
+  - index: 7
+    name: export_certificate
+    attribute_type: key_data
+    default_value: 0x60 -- -- Action
+  - index: 8
+    name: remove_certificate
+    attribute_type: key_data
+    default_value: 0x68 -- -- Action
+  methods: []
+- group: Uncategorized
+  name: Security - Receive frame counter - broadcast key
+  class_id: 1
+  version: 0
+  obis_code: 0-0:43.1.1.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00002B0101FF" Get -- Get'
+  - index: 2
+    name: value
+    attribute_type: double_long_unsigned
+    default_value: 0x08 Get -- Get
+  methods: []
+- group: Uncategorized
+  name: Security - Receive frame counter - unicast key
+  class_id: 1
+  version: 0
+  obis_code: 0-0:43.1.0.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00002B0100FF" Get -- Get'
+  - index: 2
+    name: value
+    attribute_type: double_long_unsigned
+    default_value: 0x08 Get -- Get
+  methods: []
+- group: Uncategorized
+  name: COSEM logical device name
+  class_id: 1
+  version: 0
+  obis_code: '0xFD00'
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00002A0000FF" Get -- Get'
+  - index: 2
+    name: value
+    attribute_type: octet_string[16]
+    default_value: 0x08 Get -- Get unique identification of the logical device
+  methods: []
+- group: Uncategorized
+  name: Device ID 1, manufacturing number
+  class_id: 1
+  version: 0
+  obis_code: 0-0:96.1.0.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000600100FF" -- -- Get'
+  - index: 2
+    name: value
+    attribute_type: octet_string[0..16]
+    default_value: 0x08 -- -- Get E-meter serial number (Serial number of the device, handled by the
+  methods: []
+- group: Uncategorized
+  name: Device ID 2
+  class_id: 1
+  version: 0
+  obis_code: 0-0:96.1.1.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000600101FF" -- -- Get'
+  - index: 2
+    name: value
+    attribute_type: octet_string[0..48]
+    default_value: 0x08 -- -- Get,Set E-meter equipment identifier
+  methods: []
+- group: Uncategorized
+  name: Device ID 3
+  class_id: 1
+  version: 0
+  obis_code: 0-0:96.1.2.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000600102FF" -- -- Get'
+  - index: 2
+    name: value
+    attribute_type: octet_string[0..48]
+    default_value: 0x08 -- -- Get,Set function location
+  methods: []
+- group: Uncategorized
+  name: Device ID 4
+  class_id: 1
+  version: 0
+  obis_code: 0-0:96.1.3.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000600103FF" -- -- Get'
+  - index: 2
+    name: value
+    attribute_type: octet_string[0..48]
+    default_value: 0x08 -- -- Get,Set location information
+  methods: []
+- group: Uncategorized
+  name: Device ID 5
+  class_id: 1
+  version: 0
+  obis_code: 0-0:96.1.4.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000600104FF" -- -- Get'
+  - index: 2
+    name: value
+    attribute_type: octet_string[0..48]
+    default_value: 0x08 -- -- Get,Set no special meaning defined
+  methods: []
+- group: Uncategorized
+  name: Device ID 6, IDIS certification number
+  class_id: 1
+  version: 0
+  obis_code: 0-0:96.1.5.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000600105FF" -- -- Get'
+  - index: 2
+    name: value
+    attribute_type: octet_string[0..16]
+    default_value: 0x08 -- -- Get IDIS certification number
+  methods: []
+- group: Uncategorized
+  name: Currently active energy tariff
+  class_id: 1
+  version: 0
+  obis_code: 0-0:96.14.0.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000600E00FF" -- -- Get'
+  - index: 2
+    name: value
+    attribute_type: octet_string[0..8]
+    default_value: 0x08 -- -- Get currently active tariff = active_mask of register activation object (mask_name
+  methods: []
+- group: Uncategorized
+  name: IDIS function control
+  class_id: 122
+  version: 0
+  obis_code: 0-0:44.1.0.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00002C0100FF" -- -- Get'
+  - index: 2
+    name: activation_status
+    attribute_type: array
+    default_value: -- -- Get
+  - index: 3
+    name: function_list
+    attribute_type: array[3](functional_block) {
+    default_value: -- -- Get
+  - index: 1
+    name: set_function_status
+    attribute_type: array
+    default_value: -- -- Action
+  methods: []
+- group: Uncategorized
+  name: IDIS function control scheduler
+  class_id: 22
+  version: 0
+  obis_code: 0-0:15.0.7.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000F0007FF" -- -- Get'
+  - index: 2
+    name: executed_script
+    attribute_type: script22
+    default_value: 0x08 {0-0:10.0.111.255, [1..8]} -- -- Get, Set
+  - index: 3
+    name: type
+    attribute_type: enum
+    default_value: 0x10 1 -- -- Get, (Set) 1 is mandatory (others are optional.
+  - index: 4
+    name: execution_time
+    attribute_type: array[0..1](execution_time_date) 0x18
+    default_value: -- -- Get, Set dedicated timepoint for enabling and disabling functions; the execution can be
+  methods: []
+- group: Uncategorized
+  name: IDIS function control script table
+  class_id: 9
+  version: 0
+  obis_code: 0-0:10.0.111.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000A006FFF" -- -- Get'
+  - index: 2
+    name: scripts
+    attribute_type: array[8](script9)
+    default_value: 0x08 { -- -- Get scripts to enable and disable the capturing of load profile 1 and 2 (opt-in, opt-
+  - index: 1
+    name: execute
+    attribute_type: long_unsigned
+    default_value: 0x20 -- -- -- Executes the script specified in parameter data.
+  methods: []
+- group: Uncategorized
+  name: Clock
+  class_id: 8
+  version: 0
+  obis_code: 0-0:1.0.0.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000010000FF" Get'
+  - index: 2
+    name: time
+    attribute_type: octet_string[12]
+    default_value: 0x08 -- Set Get, Set Current date and time as local time, deviation can be handeled or set to
+  - index: 3
+    name: time_zone
+    attribute_type: long
+    default_value: 0x10 -60 -- Set Get, Set
+  - index: 4
+    name: status
+    attribute_type: unsigned
+    default_value: 0x18 -- Get
+  - index: 5
+    name: daylights_savings_begin
+    attribute_type: octet_string[12]
+    default_value: 0x20 "FFFF03FE07020000008000FF" -- Set Get, Set last sunday in March at 02:00
+  - index: 6
+    name: daylights_savings_end
+    attribute_type: octet_string[12]
+    default_value: 0x28 "FFFF0AFE07030000008000FF" -- Set Get, Set last sunday in October at 03:00
+  - index: 7
+    name: daylights_savings_deviation integer
+    attribute_type: 0x30 60
+    default_value: -- Set Get, Set
+  - index: 8
+    name: daylights_savings_enabled boolean
+    attribute_type: 0x38 1
+    default_value: -- Set Get, Set
+  - index: 9
+    name: clock_base
+    attribute_type: enum
+    default_value: 0x40 1 -- Get internal crystal (by default)
+  methods: []
+- group: Uncategorized
+  name: Local Time
+  class_id: 1
+  version: 0
+  obis_code: 1-0:0.9.1.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0100000901FF" -- -- Get'
+  - index: 2
+    name: value
+    attribute_type: octet_string[4]
+    default_value: 0x08 -- -- Get
+  methods: []
+- group: Uncategorized
+  name: Local Date
+  class_id: 1
+  version: 0
+  obis_code: 1-0:0.9.2.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0100000902FF" -- -- Get'
+  - index: 2
+    name: value
+    attribute_type: octet_string[5]
+    default_value: 0x08 -- -- Get
+  methods: []
+- group: Uncategorized
+  name: Clock Time Shift Limit
+  class_id: 3
+  version: 0
+  obis_code: 1-0:0.9.11.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"010000090BFF" -- -- Get'
+  - index: 2
+    name: value
+    attribute_type: unsigned
+    default_value: 0x08 60 -- Set Get, Set Maximum allowed time shift without registration of a time shift event
+  - index: 3
+    name: scaler_unit
+    attribute_type: scal_unit_type
+    default_value: 0x10 {0,7} -- -- Get
+  - index: 1
+    name: reset
+    attribute_type: '0x28'
+    default_value: -- --
+  methods: []
+- group: Uncategorized
+  name: NTP setup
+  class_id: 100
+  version: 0
+  obis_code: 0-0:25.10.0.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000190A00FF" -- -- Get'
+  - index: 2
+    name: activated
+    attribute_type: boolean
+    default_value: 0x08 0 -- Set Get, Set
+  - index: 3
+    name: server_address
+    attribute_type: octet_string[0..*]
+    default_value: 0x10 -- -- Get, Set
+  - index: 4
+    name: server_port
+    attribute_type: long_unsigned
+    default_value: 0x18 -- -- Get, Set
+  - index: 5
+    name: authentication_method
+    attribute_type: enum
+    default_value: 0x20 1 -- -- Get, Set Only "no secret" or "shared secrets" supported.
+  - index: 6
+    name: authentication_keys
+    attribute_type: array
+    default_value: 0x28 -- -- Set
+  - index: 7
+    name: client_key
+    attribute_type: octet_string[0..*]
+    default_value: 0x30 -- -- Set
+  - index: 1
+    name: synchronize_time
+    attribute_type: integer
+    default_value: 0x38 -- Action Action
+  - index: 2
+    name: add_authentication_key
+    attribute_type: '0x40'
+    default_value: -- -- --
+  - index: 3
+    name: delete _authentication_key
+    attribute_type: '0x48'
+    default_value: -- -- --
+  methods: []
+- group: Uncategorized
+  name: Activity Calendar
+  class_id: 20
+  version: 0
+  obis_code: 0-0:13.0.0.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000D0000FF" -- -- Get'
+  - index: 2
+    name: calendar_name_active
+    attribute_type: octet_string[0..8]
+    default_value: 0x08 -- -- Get The calendar_name_active has a size of 8 characters at least, i.e. [0..8] is
+  - index: 3
+    name: season_profile_active
+    attribute_type: array[0..*]
+    default_value: 0x10 -- -- Get
+  - index: 4
+    name: week_profile_table_active array[0..*]
+    attribute_type: '0x18'
+    default_value: -- -- Get
+  - index: 5
+    name: day_profile_table_active
+    attribute_type: array[0..*]
+    default_value: 0x20 -- -- Get
+  - index: 6
+    name: calendar_name_passive
+    attribute_type: octet_string[0..8]
+    default_value: 0x28 -- Set Get, Set see calendar_name_active
+  - index: 7
+    name: season_profile_passive
+    attribute_type: array[0..*]
+    default_value: 0x30 -- Set Get, Set
+  - index: 8
+    name: week_profile_table_passive array[0..*]
+    attribute_type: '0x38'
+    default_value: -- Set Get, Set
+  - index: 9
+    name: day_profile_table_passive array[0..*]
+    attribute_type: '0x40'
+    default_value: -- Set Get, Set
+  - index: 10
+    name: activate_passive_calendar_time octet_string[12] 0x48
+    attribute_type: --
+    default_value: Set Get, Set
+  - index: 1
+    name: activate_passive_calendar integer
+    attribute_type: '0x50'
+    default_value: -- (Action) (Action)
+  methods: []
+- group: Uncategorized
+  name: Special Days Table
+  class_id: 11
+  version: 0
+  obis_code: 0-0:11.0.0.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000B0000FF" -- -- Get'
+  - index: 2
+    name: entries
+    attribute_type: array[0..30]
+    default_value: 0x08 -- Set Get, Set
+  methods: []
+- group: Uncategorized
+  name: Register activation - Energy
+  class_id: 6
+  version: 0
+  obis_code: 0-0:14.0.1.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000E0001FF" -- -- Get'
+  - index: 2
+    name: register_assignment
+    attribute_type: array[32..*](register_assignment_item) 0x08 -- (Set)
+    default_value: Get, (Set) Array size depends on the amount of rated registers supported; 32 mandatory,
+  - index: 3
+    name: mask_list
+    attribute_type: array[0..*]
+    default_value: 0x10 -- Set Get, Set
+  - index: 4
+    name: active_mask
+    attribute_type: octet_string[0..8]
+    default_value: 0x18 -- -- Get
+  methods: []
+- group: Uncategorized
+  name: Register activation - Maximum Demand
+  class_id: 6
+  version: 0
+  obis_code: 0-0:14.0.2.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000E0002FF" -- -- Get'
+  - index: 2
+    name: register_assignment
+    attribute_type: array[16..*](register_assignment_item) 0x08 -- (Set)
+    default_value: Get, (Set) Array size depends on the amount of rated registers supported; 16 mandatory,
+  - index: 3
+    name: mask_list
+    attribute_type: array[0..*]
+    default_value: 0x10 -- Set Get, Set
+  - index: 4
+    name: active_mask
+    attribute_type: octet_string[0..8]
+    default_value: 0x18 -- -- Get
+  methods: []
+- group: Uncategorized
+  name: Tariffication script table
+  class_id: 9
+  version: 0
+  obis_code: 0-0:10.0.100.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000A0064FF" -- -- Get'
+  - index: 2
+    name: scripts
+    attribute_type: scripts
+    default_value: 0x08 Choice( -- -- Get, Set Set to be able to add also the tariff activation script for load management.
+  - index: 1
+    name: execute
+    attribute_type: long_unsigned
+    default_value: 0x20 -- -- (Action) Execute typically not needed since tariffication always controlled only
+  methods: []
+- group: Uncategorized
+  name: Predefined Scripts - MDI reset / end of billing period
+  class_id: 9
+  version: 0
+  obis_code: 0-0:10.0.1.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000A0001FF" -- -- Get'
+  - index: 2
+    name: scripts
+    attribute_type: scripts
+    default_value: 0x08 -- -- (Get) The attribute's access rights must be declared in CTI file. Allowed possibilities -
+  - index: 1
+    name: execute
+    attribute_type: long_unsigned
+    default_value: 0x20 1 -- -- Action The activation of this scripts is performed by calling the execute() method to
+  methods: []
+- group: Uncategorized
+  name: End of billing period 1 scheduler
+  class_id: 22
+  version: 0
+  obis_code: 0-0:15.0.0.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000F0000FF" -- -- Get'
+  - index: 2
+    name: executed_script
+    attribute_type: script22
+    default_value: 0x08 {0-0:10.0.1.255,1} -- -- Get "MDI reset / end of billing period"
+  - index: 3
+    name: type
+    attribute_type: enum
+    default_value: 0x10 1 -- -- Get, (Set) 1 is mandatory (Other are optional.
+  - index: 4
+    name: execution_time
+    attribute_type: array[0..1](execution_time_date) 0x18
+    default_value: -- -- Get, Set at midnight (or any other time) of the first day of every month; the execution
+  methods: []
+- group: Uncategorized
+  name: Data of billing period 1
+  class_id: 7
+  version: 1
+  obis_code: 0-0:98.1.0.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000620100FF" -- -- Get'
+  - index: 2
+    name: buffer
+    attribute_type: array
+    default_value: 0x08 -- -- Get selective access per range and entry
+  - index: 3
+    name: capture_objects
+    attribute_type: array[1..*](capture_object_definition) 0x10 {{8,0-0:1.0.0.255,2,0}, {3,1-0:1.8.1.255,2,0}, {3,1-0:1.8.2.255,2,0}, -- -- Get, Set clock;+A
+      rate 1;+A rate 2;−A rate 1;−A rate 2; etc.
+    default_value: ''
+  - index: 4
+    name: capture_period
+    attribute_type: double_long_unsigned
+    default_value: 0x18 0 -- -- Get
+  - index: 5
+    name: sort_method
+    attribute_type: enum
+    default_value: 0x20 1 -- -- Get unsorted (FIFO)
+  - index: 6
+    name: sort_object
+    attribute_type: capture_object_definition 0x28 {*,*-*:*.*.*.*,*,*} -- -- Get unsorted
+    default_value: ''
+  - index: 7
+    name: entries_in_use
+    attribute_type: double_long_unsigned
+    default_value: 0x30 -- -- Get
+  - index: 8
+    name: profile_entries
+    attribute_type: double_long_unsigned
+    default_value: 0x38 [13..*] -- -- Get ≥ 13 months
+  - index: 1
+    name: reset
+    attribute_type: integer
+    default_value: 0x58 -- -- Action
+  methods: []
+- group: Uncategorized
+  name: Disconnect control scheduler
+  class_id: 22
+  version: 0
+  obis_code: 0-0:15.0.1.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000F0001FF" -- -- Get'
+  - index: 2
+    name: executed_script
+    attribute_type: script22
+    default_value: 0x08 {0-0:10.0.106.255, [1..4]} -- -- Get, Set Connect or disconnect script of disconnector script table (0-0:10.0.106.255)
+  - index: 3
+    name: type
+    attribute_type: enum
+    default_value: 0x10 1 -- -- Get, (Set) 1 is mandatory (others are optional.
+  - index: 4
+    name: execution_time
+    attribute_type: array[0..1](execution_time_date) 0x18
+    default_value: -- -- Get, Set dedicated timepoint for connection or disconnection; the execution can be
+  methods: []
+- group: Uncategorized
+  name: Disconnector script table
+  class_id: 9
+  version: 0
+  obis_code: 0-0:10.0.106.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000A006AFF" -- -- Get'
+  - index: 2
+    name: scripts
+    attribute_type: array[4](script9)
+    default_value: 0x08 { -- -- Get connect and disconnect scripts, 1 and 2 model local disconnection and local
+  - index: 1
+    name: execute
+    attribute_type: long_unsigned
+    default_value: 0x20 -- -- -- Executes the script specified in parameter data.
+  methods: []
+- group: Uncategorized
+  name: Disconnect Control Activity Calendar
+  class_id: 20
+  version: 0
+  obis_code: 0-0:13.0.1.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000D0001FF" -- -- Get'
+  - index: 2
+    name: calendar_name_active
+    attribute_type: octet_string[0..8]
+    default_value: 0x08 -- -- Get
+  - index: 3
+    name: season_profile_active
+    attribute_type: array[0..*]
+    default_value: 0x10 -- -- Get
+  - index: 4
+    name: week_profile_table_active array[0..*]
+    attribute_type: '0x18'
+    default_value: -- -- Get
+  - index: 5
+    name: day_profile_table_active
+    attribute_type: array[0..*]
+    default_value: 0x20 -- -- Get
+  - index: 6
+    name: calendar_name_passive
+    attribute_type: octet_string[0..8]
+    default_value: 0x28 -- Set Get, Set
+  - index: 7
+    name: season_profile_passive
+    attribute_type: array[0..*]
+    default_value: 0x30 -- Set Get, Set
+  - index: 8
+    name: week_profile_table_passive array[0..*]
+    attribute_type: '0x38'
+    default_value: -- Set Get, Set
+  - index: 9
+    name: day_profile_table_passive array[0..*]
+    attribute_type: '0x40'
+    default_value: -- Set Get, Set
+  - index: 10
+    name: activate_passive_calendar_time octet_string[12] 0x48
+    attribute_type: --
+    default_value: Set Get, Set
+  - index: 1
+    name: activate_passive_calendar integer
+    attribute_type: '0x50'
+    default_value: -- (Action) (Action)
+  methods: []
+- group: Uncategorized
+  name: Disconnect Control Special Days Table
+  class_id: 11
+  version: 0
+  obis_code: 0-0:11.0.1.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000B0001FF" -- -- Get'
+  - index: 2
+    name: entries
+    attribute_type: array[0..30]
+    default_value: 0x08 -- Set Get, Set
+  methods: []
+- group: Uncategorized
+  name: Disconnect control
+  class_id: 70
+  version: 0
+  obis_code: 0-0:96.3.10.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"000060030AFF" -- -- Get'
+  - index: 2
+    name: output_state
+    attribute_type: boolean
+    default_value: 0x08 -- -- Get
+  - index: 3
+    name: control_state
+    attribute_type: enum
+    default_value: 0x10 -- -- Get
+  - index: 4
+    name: control_mode
+    attribute_type: enum
+    default_value: 0x18 -- -- Get, Set if only one conrol mode is available set is not allowed.
+  - index: 1
+    name: remote_disconnect
+    attribute_type: integer
+    default_value: 0x20 -- -- Action
+  - index: 2
+    name: remote_connect
+    attribute_type: integer
+    default_value: 0x28 -- -- Action
+  methods: []
+- group: Uncategorized
+  name: Event Object - Disconnector Control log
+  class_id: 1
+  version: 0
+  obis_code: 0-0:96.11.2.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000600B02FF" -- -- Get'
+  - index: 2
+    name: value
+    attribute_type: enum
+    default_value: 0x08 -- -- Get event number (0 to 255); at first power up or if no events were yet generated
+  methods: []
+- group: Uncategorized
+  name: Disconnector Control Log
+  class_id: 7
+  version: 1
+  obis_code: 0-0:99.98.2.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"0000636202FF" -- -- Get'
+  - index: 2
+    name: buffer
+    attribute_type: array
+    default_value: 0x08 -- -- Get selective access per range
+  - index: 3
+    name: capture_objects
+    attribute_type: array[2..3](capture_object_definition) 0x10 {{8, 0-0:1.0.0.255, 2, 0}, -- -- Get, (Set) clock;control event code;limiter threshold
+    default_value: ''
+  - index: 4
+    name: capture_period
+    attribute_type: double_long_unsigned
+    default_value: 0x18 0 -- -- Get asynchronously
+  - index: 5
+    name: sort_method
+    attribute_type: enum
+    default_value: 0x20 1 -- -- Get unsorted (FIFO)
+  - index: 6
+    name: sort_object
+    attribute_type: capture_object_definition 0x28 {*,*-*:*.*.*.*,*,*} -- -- Get unsorted
+    default_value: ''
+  - index: 7
+    name: entries_in_use
+    attribute_type: double_long_unsigned
+    default_value: 0x30 -- -- Get
+  - index: 8
+    name: profile_entries
+    attribute_type: double_long_unsigned
+    default_value: 0x38 [10..*] -- -- Get
+  - index: 1
+    name: reset
+    attribute_type: integer
+    default_value: 0x58 -- -- Action
+  methods: []
+- group: Uncategorized
+  name: Load Mgmt script table M-L M-L
+  class_id: 9
+  version: 0
+  obis_code: 0-0:10.0.103.255
+  attributes:
+  - index: 1
+    name: logical_name
+    attribute_type: octet_string[6]
+    default_value: '"00000A0067FF" -- -- Get'
+  - index: 2
+    name: scripts
+    attribute_type: array[4..*](script9)
+    default_value: 0x08 { -- -- Get connect and disconnect methods of the load mgmt objects (relays), see also
+  methods: []

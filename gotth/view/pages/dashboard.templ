@@ -1,0 +1,22 @@
+package pages
+
+import "gotth/view/layouts"
+
+// Dashboard 组件现在接收一个 email 参数
+templ Dashboard(email string) {
+	@layouts.App("Dashboard") {
+		<h1 class="text-4xl font-bold mb-4">Welcome back!</h1>
+		<div class="stats shadow">
+			<div class="stat">
+				<div class="stat-title">Currently logged in as</div>
+				<div class="stat-value text-accent">{ email }</div>
+				<div class="stat-desc">Have a great day!</div>
+			</div>
+		</div>
+		<div class="mt-8">
+			<label for="app-drawer" class="btn btn-primary lg:hidden">
+				Open Menu
+			</label>
+		</div>
+	}
+}

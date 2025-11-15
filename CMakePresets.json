@@ -31,7 +31,7 @@
             "hidden": true,
             "generator": "Ninja Multi-Config",
             "cacheVariables": {
-                "CMAKE_MODULE_PATH":"${sourceDir}/cmake",
+                "CMAKE_MODULE_PATH": "${sourceDir}/cmake",
                 "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo;MinSizeRel"
             }
         },
@@ -106,12 +106,13 @@
                 "Windows Host",
                 "base"
             ],
-            "binaryDir": "${sourceDir}/build/msvc",
-            "installDir": "${sourceDir}/.local/msvc",
+            "binaryDir": "${sourceDir}/build/windows-x64-msvc",
+            "installDir": "${sourceDir}/.local/windows-x64-msvc",
             "generator": "Ninja Multi-Config",
             "cacheVariables": {
+                "CMAKE_PREFIX_PATH": "${sourceDir}/.local/windows-x64-msvc",
                 "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo;MinSizeRel",
-                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/msvc.cmake"
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchains/x64-windows-cl.cmake"
             }
         }
     ],

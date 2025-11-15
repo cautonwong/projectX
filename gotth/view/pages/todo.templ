@@ -1,0 +1,28 @@
+package pages
+
+import (
+    "gotth/internal/data"
+    "gotth/view/layouts"
+    "gotth/view/shared"  
+)
+
+// This component receives a slice of Todo items
+templ Todos(todos []data.Todo) {
+    @layouts.App("My Todos") {
+        <h1 class="text-4xl font-bold mb-8">My Todo List</h1>
+
+        @shared.TodoForm()
+        
+        <div id="todo-list" class="mt-8">
+            if len(todos) == 0 {
+                <div class="text-center p-8 bg-base-200 rounded-lg">
+                    <p class="text-lg text-gray-500">You have no todos yet. Add one above!</p>
+                </div>
+            } else {
+                for _, todo := range todos {
+                    @shared.TodoItem(todo)
+                }
+            }
+        </div>
+    }
+}

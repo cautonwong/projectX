@@ -1,0 +1,152 @@
+package sections
+
+import (
+	"gotth/internal/data"
+	"gotth/view/layouts"
+	"strconv"
+	"fmt"
+)
+
+type TableData struct {
+	Users       []data.User
+	TotalUsers  int64
+	CurrentPage int
+	TotalPages  int
+	PageSize    int
+	SearchQuery string 
+	SortBy      string 
+	SortOrder   string 
+}
+
+func getNextSortOrder(currentSortBy, currentSortOrder, columnName string) string {
+	if currentSortBy == columnName && currentSortOrder == "asc" {
+		return "desc"
+	}
+	return "asc"
+}
+
+templ TableExample(props TableData) {
+	@layouts.App("UI Lab: Advanced Table") {
+		<div class="prose max-w-full">
+			<h1>Advanced Table</h1>
+			<p>A feature-rich table with server-side pagination, sorting, and filtering.</p>
+
+			<!-- The container that HTMX will replace -->
+			<div id="users-table-container" class="mt-8">
+				@TableComponent(props)
+			</div>
+		</div>
+	}
+}
+
+templ TableComponent(props TableData) {
+	// --- 新增: 搜索框 ---
+	<div class="mb-4">
+		<input
+			type="search"
+			name="search"
+			class="input input-bordered w-full md:w-1/3"
+			placeholder="Search by email..."
+			value={ props.SearchQuery }
+			hx-get="/ui-lab/table-content" 
+			hx-target="#users-table-container"
+			hx-swap="innerHTML"
+			hx-trigger="keyup changed delay:500ms, search" 
+			hx-push-url="true"
+			hx-indicator=".htmx-indicator" 
+		/>
+	</div>
+
+	<div class="overflow-x-auto">
+		<table class="table w-full">
+			<thead>
+				<tr>
+					<th>@sortableHeader(props, "email", "Email")</th>
+					<th>Created At</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				if len(props.Users) == 0 {
+					<tr>
+						<td colspan="3" class="text-center">No users found.</td>
+					</tr>
+				}
+				for _, user := range props.Users {
+					@tableRow(user)
+				}
+			</tbody>
+		</table>
+	</div>
+	@pagination(props) // <-- 分页组件也需要更新
+}
+
+templ sortableHeader(props TableData, columnName, displayText string) {
+
+	<a
+		href="#"
+		hx-get={ fmt.Sprintf("/ui-lab/table-content?page=1&search=%s&sort_by=%s&sort_order=%s", props.SearchQuery, columnName, getNextSortOrder(props.SortBy, props.SortOrder, columnName)) }
+		hx-target="#users-table-container"
+		hx-swap="innerHTML"
+		hx-push-url="true"
+		class="flex items-center gap-2"
+	>
+		{ displayText }
+		if props.SortBy == columnName {
+			if props.SortOrder == "asc" {
+				<ion-icon name="arrow-up-outline"></ion-icon>
+			} else {
+				<ion-icon name="arrow-down-outline"></ion-icon>
+			}
+		}
+	</a>
+}
+
+templ tableRow(user data.User) {
+	<tr>
+		<td>{ user.Email }</td>
+		<td>{ user.CreatedAt.Format("2006-01-02 15:04") }</td>
+		<td>
+			<button class="btn btn-xs btn-outline">Edit</button>
+		</td>
+	</tr>
+}
+
+templ pagination(props TableData) {
+	<div class="join mt-4 flex justify-center">
+		if props.CurrentPage > 1 {
+			<a
+				href={ templ.URL(fmt.Sprintf("/ui-lab/table?page=%d&search=%s&sort_by=%s&sort_order=%s", props.CurrentPage-1, props.SearchQuery, props.SortBy, props.SortOrder)) }
+				class="join-item btn"
+				hx-get={ fmt.Sprintf("/ui-lab/table-content?page=%d&search=%s&sort_by=%s&sort_order=%s", props.CurrentPage-1, props.SearchQuery, props.SortBy, props.SortOrder) }
+				hx-target="#users-table-container"
+				hx-swap="innerHTML"
+				hx-push-url="true"
+			>«</a>
+		}
+		for i := 1; i <= props.TotalPages; i++ {
+			if i == props.CurrentPage {
+				<button class="join-item btn btn-active">{ strconv.Itoa(i) }</button>
+			} else {
+				<a
+					href={ templ.URL(fmt.Sprintf("/ui-lab/table?page=%d&search=%s&sort_by=%s&sort_order=%s", i, props.SearchQuery, props.SortBy, props.SortOrder)) }
+					class="join-item btn"
+					hx-get={ fmt.Sprintf("/ui-lab/table-content?page=%d&search=%s&sort_by=%s&sort_order=%s", i, props.SearchQuery, props.SortBy, props.SortOrder) }
+					hx-target="#users-table-container"
+					hx-swap="innerHTML"
+					hx-push-url="true"
+				>{ strconv.Itoa(i) }</a>
+			}
+		}
+		if props.CurrentPage < props.TotalPages {
+			<a
+				href={ templ.URL(fmt.Sprintf("/ui-lab/table?page=%d&search=%s&sort_by=%s&sort_order=%s", props.CurrentPage+1, props.SearchQuery, props.SortBy, props.SortOrder)) }
+				class="join-item btn"
+				hx-get={ fmt.Sprintf("/ui-lab/table-content?page=%d&search=%s&sort_by=%s&sort_order=%s", props.CurrentPage+1, props.SearchQuery, props.SortBy, props.SortOrder) }
+				hx-target="#users-table-container"
+				hx-swap="innerHTML"
+				hx-push-url="true"
+			>»</a>
+		}
+	</div>
+}

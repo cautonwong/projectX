@@ -1,0 +1,55 @@
+package ui_lab
+
+import "gotth/view/layouts"
+
+templ Index() {
+	@layouts.App("UI Component Lab") {
+		<h1 class="text-4xl font-bold mb-4">UI Component Laboratory</h1>
+		<p class="text-lg mb-8">
+			Welcome! This is a living showcase of the core UI components available in this boilerplate.
+			Each component is a practical example of how to use Go, Templ, HTMX, and Alpine.js together.
+		</p>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			<div class="card bg-base-100 shadow-xl">
+				<div class="card-body">
+					<h2 class="card-title">Buttons & Forms</h2>
+					<p>Showcase of various button styles, states, and form elements.</p>
+					<div class="card-actions justify-end">
+						<a href="/ui-lab/buttons-forms" class="btn btn-primary" hx-boost="true">View</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="card bg-base-100 shadow-xl">
+				<div class="card-body">
+					<h2 class="card-title">Feedback Components</h2>
+					<p>Examples of Modals, Toasts, and Alerts.</p>
+					<div class="card-actions justify-end">
+						<a href="/ui-lab/feedback" class="btn btn-primary" hx-boost="true">View</a>
+					</div>
+				</div>
+			</div>
+			
+			<div class="card bg-base-100 shadow-xl">
+				<div class="card-body">
+					<h2 class="card-title">Advanced Table</h2>
+					<p>A feature-rich table with sorting, pagination, and filtering.</p>
+					<div class="card-actions justify-end">
+						<a href="/ui-lab/table" class="btn btn-primary" hx-boost="true">View</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="card bg-base-100 shadow-xl">
+				<div class="card-body">
+					<h2 class="card-title">Real-time SSE</h2>
+					<p>Demonstrates real-time updates pushed from the server.</p>
+					<div class="card-actions justify-end">
+						<a href="/ui-lab/sse" class="btn btn-primary" hx-boost="true">View</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}

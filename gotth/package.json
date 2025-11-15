@@ -1,0 +1,15 @@
+{
+  "name": "gotth",
+  "version": "1.0.0",
+  "scripts": {
+    "css:dev": "npx @tailwindcss/cli -i ./assets/css/main.css -o ./public/styles.css --watch",
+    "css:build": "npx @tailwindcss/cli -i ./assets/css/main.css -o ./public/styles.css --minify"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.0.0",
+    "daisyui": "^5.0.54",
+    "tailwindcss": "^4.0.0",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.9.3"
+  }
+}

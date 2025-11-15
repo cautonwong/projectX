@@ -1,0 +1,27 @@
+package shared
+
+templ TodoForm() {
+    // This form will POST to /todos
+    // After a successful post, htmx will target the #todo-list div
+    // and prepend the response to the top of the list.
+    <form
+        class="mb-8"
+        hx-post="/todos"
+        hx-target="#todo-list"
+        hx-swap="afterbegin"
+        hx-on::after-request="this.reset()"
+    >
+        <div class="form-control">
+            <div class="join">
+                <input
+                    type="text"
+                    name="task"
+                    placeholder="e.g., Learn HTMX"
+                    class="input input-bordered join-item w-full"
+                    required
+                />
+                <button class="btn btn-primary join-item">Add Todo</button>
+            </div>
+        </div>
+    </form>
+}

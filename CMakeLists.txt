@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.14)
-project(uv_plus 
+project(projectX 
     VERSION 1.0.0
-    LANGUAGES C
-    DESCRIPTION "Asynchronous Database and Network Framework"
+    LANGUAGES C CXX
+    DESCRIPTION "projectX"
 )
 # 定义平台和架构变量
 if(WIN32)
@@ -39,22 +39,38 @@ else()
     set(ARCH "x86")
 endif()
 set(LOCAL_PREFIX_PATH "${PROJECT_SOURCE_DIR}/.local")
-#set(OPENSSL_ROOT_DIR "/usr")
-#set(OPENSSL_CRYPTO_LIBRARY "/usr/lib/x86_64-linux-gnu/libcrypto.so")
-#set(OPENSSL_SSL_LIBRARY "/usr/lib/x86_64-linux-gnu/libssl.so")
 
-set(ZLIB_ROOT_DIR "/usr")
-set(ZLIB_LIBRARY "/usr/lib/x86_64-linux-gnu/libz.so")
-set(ZLIB_INCLUDE_DIR "/usr/include")
-#set(CMAKE_PREFIX_PATH 
-    #${LOCAL_PREFIX_PATH}/${PLATFORM}-${ARCH}/libyaml
-    #${LOCAL_PREFIX_PATH}/${PLATFORM}-${ARCH}/Libevent
-   #${LOCAL_PREFIX_PATH}/${PLATFORM}-${ARCH}/libuv
-    #${CMAKE_PREFIX_PATH}
-#)
-list(APPEND CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/.local/${PLATFORM}-${ARCH}")
-message(STATUS ${PROJECT_SOURCE_DIR})
-#add_subdirectory(cmd)
-#add_subdirectory(third-party/libmsx)
-#add_subdirectory(cmd/firmware/boilerplate)
-add_subdirectory(microservice)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+        #set(OPENSSL_ROOT_DIR "/usr")
+        #set(OPENSSL_CRYPTO_LIBRARY "/usr/lib/x86_64-linux-gnu/libcrypto.so")
+        #set(OPENSSL_SSL_LIBRARY "/usr/lib/x86_64-linux-gnu/libssl.so")
+
+        set(ZLIB_ROOT_DIR "/usr")
+        set(ZLIB_LIBRARY "/usr/lib/x86_64-linux-gnu/libz.so")
+        set(ZLIB_INCLUDE_DIR "/usr/include")
+        #set(CMAKE_PREFIX_PATH 
+            #${LOCAL_PREFIX_PATH}/${PLATFORM}-${ARCH}/libyaml
+            #${LOCAL_PREFIX_PATH}/${PLATFORM}-${ARCH}/Libevent
+        #${LOCAL_PREFIX_PATH}/${PLATFORM}-${ARCH}/libuv
+            #${CMAKE_PREFIX_PATH}
+        #)
+        list(APPEND CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/.local/${PLATFORM}-${ARCH}")
+        message(STATUS ${PROJECT_SOURCE_DIR})
+        #add_subdirectory(cmd)
+        #add_subdirectory(third-party/libmsx)
+        #add_subdirectory(cmd/firmware/boilerplate)
+        add_subdirectory(microservice)
+    else(MSVC)
+        #先导入工具链系统目录 全局信息 适用于所有目标
+        include_directories(BEFORE SYSTEM ${TOOLCHAIN_INCLUDEPATH})
+        link_directories(BEFORE SYSTEM ${TOOLCHAIN_LIBRARYPATH})
+
+        add_subdirectory(qt-boilerplate)
+    endif()
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    add_subdirectory(cmd/linux_daemon)
+endif()

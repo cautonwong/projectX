@@ -11,7 +11,7 @@
 *.ilk
 *.map
 *.exp
-
+.env*
 # Precompiled Headers
 *.gch
 *.pch
@@ -57,5 +57,31 @@ CMakeUserPresets.json
 build/
 vendor/
 docs/
+target/
 node_modules/
 *_templ.go
+*.pdf
+# Build artifacts
+/build/
+*.VC.db
+*.suo
+*.user
+*.pro.user
+*.creator.user
+
+# VSCode user settings
+.vscode/launch.json
+.vscode/tasks.json
+
+# CMake user presets
+CMakeUserPresets.json
+
+# CPack packaging artifacts
+_CPack_Packages/
+*.cpack.cmake
+CPackConfig.cmake
+CPackSourceConfig.cmake
+
+# vcpkg
+vcpkg_installed/
+flutter_boilerplate/

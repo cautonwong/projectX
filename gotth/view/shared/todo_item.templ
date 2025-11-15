@@ -1,0 +1,42 @@
+package shared
+
+import "gotth/internal/data"
+
+templ TodoItem(todo data.Todo) {
+    // Give the container a unique ID so HTMX can replace it after an update.
+    <div id={ "todo-" + todo.ID } class="flex items-center justify-between p-4 bg-base-100 rounded-lg shadow mb-2">
+        <div>
+            if todo.Completed {
+                <span class="line-through text-gray-500">{ todo.Task }</span>
+            } else {
+                <span>{ todo.Task }</span>
+            }
+        </div>
+        <div class="flex items-center space-x-2">
+            // --- UPDATE BUTTON ---
+            <button
+                class="btn btn-sm btn-success"
+                hx-patch={ "/todos/" + todo.ID } 
+                hx-target={ "#todo-" + todo.ID } 
+                hx-swap="outerHTML"            
+            >
+                if todo.Completed {
+                    Undo
+                } else {
+                    Complete
+                }
+            </button>
+
+            // --- DELETE BUTTON ---
+            <button
+                class="btn btn-sm btn-error"
+                hx-delete={ "/todos/" + todo.ID } 
+                hx-target={ "#todo-" + todo.ID } 
+                hx-swap="outerHTML"            
+                hx-confirm="Are you sure you want to delete this task?"
+            >
+                Delete
+            </button>
+        </div>
+    </div>
+}

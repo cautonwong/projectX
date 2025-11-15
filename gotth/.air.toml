@@ -1,0 +1,40 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+# 修改构建命令，确保按正确顺序执行
+cmd = "templ generate && go build -o ./tmp/main ./cmd/app"
+bin = "tmp/main"
+# 调整文件监控
+full_bin = "./tmp/main"
+include_ext = ["go", "templ", "sql", "html", "css", "js"]
+exclude_ext = ["db", "log"]
+exclude_dir = ["assets", "tmp", "vendor", "node_modules", ".git"]
+include_dir = []
+exclude_regex = ["_test\\.go", "_templ\\.go"]
+follow_symlink = true
+
+# 调整监控行为
+delay = 500 # 减少延迟到500ms
+kill_delay = "0.5s"
+stop_on_error = true
+send_interrupt = true
+
+# 添加重启前要执行的命令
+pre_cmd = ["templ generate"]
+post_cmd = []
+
+[log]
+time = true
+main_only = false
+
+[screen]
+clear_on_rebuild = true
+
+[misc]
+clean_on_exit = true
+
+[watcher]
+# 添加详细的监控配置
+poll = true
+poll_interval = 500 # 毫秒

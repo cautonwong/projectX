@@ -1,0 +1,71 @@
+package sections
+
+import "gotth/view/layouts"
+
+templ ButtonsFormsExample() {
+	@layouts.App("UI Lab: Buttons & Forms") {
+		<div class="prose max-w-4xl">
+			<h1>Buttons & Forms</h1>
+			<p>A showcase of various button styles and states, and basic form elements.</p>
+
+			<!-- Section 1: Basic Button Styles -->
+			<h2 class="mt-8">Button Styles</h2>
+			<p>Basic button styles provided by DaisyUI.</p>
+			<div class="flex flex-wrap gap-4 items-center">
+				<button class="btn">Default</button>
+				<button class="btn btn-primary">Primary</button>
+				<button class="btn btn-secondary">Secondary</button>
+				<button class="btn btn-accent">Accent</button>
+				<button class="btn btn-ghost">Ghost</button>
+				<button class="btn btn-link">Link</button>
+			</div>
+
+			<!-- Section 2: Button States -->
+			<h2 class="mt-8">Button States</h2>
+			<p>Buttons can be in various states, like disabled.</p>
+			<div class="flex flex-wrap gap-4 items-center">
+				<button class="btn btn-primary" disabled>Disabled</button>
+			</div>
+
+			<!-- Section 3: HTMX Loading Indicator -->
+			<h2 class="mt-8">HTMX Loading State</h2>
+			<p>
+				This button demonstrates how to show a loading indicator during an HTMX request.
+				The request will take 2 seconds to complete on the server.
+			</p>
+			
+			<div class="p-4 border rounded-lg">
+				<!-- The Button that triggers the request -->
+				<button
+					class="btn btn-primary"
+					hx-post="/ui-lab/loading-button"
+					hx-target="#loading-response"
+					hx-indicator="#loading-spinner"
+				>
+					<span class="htmx-indicator">
+						<span class="loading loading-spinner"></span>
+						Processing...
+					</span>
+					<span class="htmx-no-indicator">
+						Click to Load
+					</span>
+				</button>
+                <span id="loading-spinner" class="htmx-indicator loading loading-spinner loading-lg"></span>
+				<!-- The target div for the response -->
+				<div id="loading-response" class="mt-4 font-bold"></div>
+			</div>
+
+		</div>
+		<style>
+		  .htmx-indicator{
+		      display:none;
+		  }
+		  .htmx-request .htmx-indicator{
+		      display:inline-block
+		  }
+		  .htmx-request.htmx-indicator{
+		      display:inline-block
+		  }
+		</style>        
+	}
+}

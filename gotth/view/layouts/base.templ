@@ -1,0 +1,69 @@
+package layouts
+
+templ Base(title string) {
+	<!DOCTYPE html>
+	<html lang="en" data-theme="light">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>{ title }</title>
+			<link rel="stylesheet" href="/public/styles.css"/>
+			<script src="/public/js/htmx.min.js"></script>
+			<script src="/public/js/sse.js"></script>
+			<script src="https://unpkg.com/alpinejs@3.14.0" defer></script>
+			<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+			<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>			
+		</head>
+		<body class="bg-base-200">
+			<!-- Toast Container is now a direct child of body, at the same level as the main app -->
+			<div
+				x-data="{
+					toasts: [],
+					counter: 0,
+					remove(id) {
+						const index = this.toasts.findIndex(t => t.id === id);
+						if (index > -1) this.toasts.splice(index, 1);
+					}
+				}"
+				@show-toast.window="toasts.push({id: counter++, message: $event.detail.message, type: $event.detail.type})"
+				@remove-toast.window="remove($event.detail.id)"
+				class="toast toast-top toast-end p-4 space-y-2"
+				style="z-index: 9999;"
+			>
+				<template x-for="toast in toasts" :key="toast.id">
+					<div
+						x-data="{
+							show: false,
+							init() {
+								this.$nextTick(() => this.show = true);
+								setTimeout(() => this.show = false, 3000);
+							},
+							remove() {
+								window.dispatchEvent(new CustomEvent('remove-toast', { detail: { id: toast.id } }));
+							}
+						}"
+						x-show="show"
+						x-transition:enter="transition ease-out duration-300"
+						x-transition:enter-start="opacity-0 transform translate-y-2"
+						x-transition:enter-end="opacity-100 transform translate-y-0"
+						x-transition:leave="transition ease-in duration-300"
+						x-transition:leave-start="opacity-100 transform translate-y-0"
+						x-transition:leave-end="opacity-0 transform translate-y-4"
+						x-on:transitionend="if (!show) { remove() }"
+						class="alert"
+						:class="{
+							'alert-success': toast.type === 'success',
+							'alert-error': toast.type === 'error',
+							'alert-info': toast.type === 'info',
+						}"
+					>
+						<span x-text="toast.message"></span>
+					</div>
+				</template>
+			</div>
+
+			{ children... }
+
+		</body>
+	</html>
+}

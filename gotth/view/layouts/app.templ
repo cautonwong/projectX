@@ -1,0 +1,113 @@
+package layouts
+
+import (
+	"context"
+	"gotth/internal/data"
+	"gotth/internal/middleware"
+	"net/http"
+)
+
+// CtxGetRequest retrieves the *http.Request from the context.
+// The templ rendering engine automatically adds the request to the context with the key "request".
+func CtxGetRequest(ctx context.Context) *http.Request {
+	req, ok := ctx.Value("request").(*http.Request)
+	if !ok {
+		// This should ideally not happen in a normal HTTP request flow.
+		// Returning an empty request to avoid a nil pointer panic.
+		return &http.Request{}
+	}
+	return req
+}
+
+// GetUserFromContext is a helper function to cleanly get user data from the context within a template.
+func GetUserFromContext(ctx context.Context) (data.User, bool) {
+	// First, get the *http.Request from the context passed by templ.
+	r := CtxGetRequest(ctx)
+	// Then, use our existing middleware helper to get the user from that request's context.
+	return middleware.CtxGetUser(r.Context())
+}
+
+templ App(title string) {
+	@Base(title) {
+		<div x-data="{ sidebarOpen: false, sidebarCollapsed: false }" class="flex h-screen bg-base-30İ0">
+			<!-- Sidebar -->
+			<aside
+				class="fixed inset-y-0 left-0 z-30 w-64 flex-shrink-0 overflow-y-auto bg-base-200 transition-transform duration-300 ease-in-out lg:static lg:block"
+				:class="{
+                    'translate-x-0': sidebarOpen,
+                    '-translate-x-full': !sidebarOpen,
+                    'lg:w-20': sidebarCollapsed,
+                    'lg:translate-x-0': true
+                }"
+			>
+				<div class="flex h-full flex-col">
+					<!-- Sidebar header -->
+					<div class="flex h-16 flex-shrink-0 items-center justify-between px-4">
+						<a href="/dashboard" class="text-xl font-bold" :class="{'lg:hidden': sidebarCollapsed}">Your App</a>
+						<button @click="sidebarOpen = false" class="lg:hidden">
+							<ion-icon name="close-outline" class="h-6 w-6"></ion-icon>
+						</button>
+					</div>
+
+					<!-- Navigation -->
+					<nav class="flex-1 space-y-2 px-4">
+						@sidebarLink("/dashboard", "grid-outline", "Dashboard")
+						@sidebarLink("/todos", "list-outline", "My Todos")
+						@sidebarLink("/analytics", "analytics-outline", "Analytics")
+						@sidebarLink("/ui-lab", "flask-outline", "UI Lab")
+					</nav>
+
+					<!-- Sidebar footer -->
+					<div class="mt-auto flex-shrink-0 p-4">
+						if user, ok := GetUserFromContext(ctx); ok {
+							<div class="flex items-center" :class="{'lg:justify-center': sidebarCollapsed}">
+								<div class="avatar placeholder">
+									<div class="bg-neutral text-neutral-content rounded-full w-10">
+										<span>{ string(user.Email[0]) }</span>
+									</div>
+								</div>
+								<div class="ml-3" :class="{'lg:hidden': sidebarCollapsed}">
+									<p class="text-sm font-medium">{ user.Email }</p>
+									<form action="/logout" method="post" hx-post="/logout">
+										<button type="submit" class="text-xs text-error hover:underline">Logout</button>
+									</form>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+			</aside>
+
+			<!-- Main content area -->
+			<div class="flex flex-1 flex-col">
+				<!-- Top bar -->
+				<header class="sticky top-0 z-10 flex h-16 w-full items-center justify-between bg-base-100 px-4 shadow">
+					<div class="flex items-center space-x-2">
+						<button @click="sidebarOpen = true" class="lg:hidden">
+							<ion-icon name="menu-outline" class="h-6 w-6"></ion-icon>
+						</button>
+						<button @click="sidebarCollapsed = !sidebarCollapsed" class="hidden lg:block">
+							<ion-icon name="menu-outline" class="h-6 w-6"></ion-icon>
+						</button>
+						<h1 class="text-xl font-semibold">{ title }</h1>
+					</div>
+					<div>
+						<!-- Top bar actions can go here -->
+					</div>
+				</header>
+
+				<!-- Page content -->
+				<main class="flex-1 overflow-y-auto p-8" id="page-content">
+					{ children... }
+				</main>
+			</div>
+		</div>
+	}
+}
+
+templ sidebarLink(href templ.SafeURL, iconName, text string) {
+	<a href={ href } class="flex items-center rounded-lg p-2 text-base-content hover:bg-base-300" hx-boost="true">
+		<ion-icon name={ iconName } class="h-6 w-6 flex-shrink-0"></ion-icon>
+		<span class="ml-3" :class="{'lg:hidden': sidebarCollapsed}">{ text }</span>
+	</a>
+}

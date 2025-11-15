@@ -4,6 +4,22 @@
     "C_Cpp.errorSquiggles": "disabled",
     "editor.inlayHints.enabled": "off",
     "clangd.path": "/usr/bin/clangd",
+    "rust-analyzer.check.command": "clippy",
+    "rust-analyzer.checkOnSave": true,
+    "rust-analyzer.cargo.buildScripts.enable": true,
+    "rust-analyzer.cargo.features": "all",
+    "rust-analyzer.diagnostics.enable": true,
+    "rust-analyzer.lruCapacity": 1000,
+    "rust-analyzer.server.extraEnv": {
+        "CARGO_TARGET_DIR": "target/rust-analyzer"
+    },
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit"
+    },
+    "rust-analyzer.linkedProjects": [
+        "./cmd/rustp/Cargo.toml"
+    ],
     "clangd.arguments": [
         "--compile-commands-dir=${workspaceFolder}/build",
         "--cross-file-rename",
@@ -25,5 +41,30 @@
         "--background-index"
     ], // 可选，添加其他clangd参数
     "git.ignoreLimitWarning": true,
-    "mcu-debug.rtos-views.showRTOS": false
+    "mcu-debug.rtos-views.showRTOS": false,
+    "files.associations": {
+        ".css": "css",
+        ".ts": "typescript",
+        ".tsx": "typescriptreact",
+        "*.templ": "html"
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/*.code-search": true
+    },
+    "typescript.tsdk": "${workspaceFolder}/gotth/node_modules/typescript/lib",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "typescript.suggest.autoImports": true,
+    "typescript.preferences.includePackageJsonAutoImports": "auto",
+    "editor.tabSize": 2,
+    "tailwindCSS.includeLanguages": {
+        "html": "html",
+        "templ": "html"
+    },
+    "tailwindCSS.emmetCompletions": true,
+    "tailwindCSS.experimental.classRegex": [
+        "class:\\s*\"([^\"]*)\"",
+        "class=\\s*\"([^\"]*)\""
+    ]
 }

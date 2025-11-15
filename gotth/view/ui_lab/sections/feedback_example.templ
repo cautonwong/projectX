@@ -1,0 +1,64 @@
+package sections
+
+import (
+	"gotth/view/layouts"
+	"gotth/view/shared/feedback"
+)
+
+templ FeedbackExample() {
+	@layouts.App("UI Lab: Feedback") {
+		<div class="prose max-w-4xl">
+			<h1>Feedback Components</h1>
+			<p>Examples of modals, alerts, and toasts.</p>
+
+			<!-- Section 1: Modal -->
+			<h2 class="mt-8">Modal / Dialog</h2>
+			<p>
+				This demonstrates how to use a modal. The modal structure is in the page,
+				and its content is loaded dynamically from the server using HTMX.
+			</p>
+
+			<div class="p-4 border rounded-lg">
+				<button
+					class="btn btn-primary"
+					hx-get="/ui-lab/modal-content"
+					hx-target="#example-modal-content"
+					hx-swap="innerHTML"
+					onclick="example_modal.showModal()"
+				>
+					Open Dynamic Modal
+				</button>
+			</div>
+
+			@feedback.Modal("example_modal") {
+				<div id="example-modal-content">
+					<span class="loading loading-spinner loading-lg"></span>
+				</div>
+			}
+
+			<!-- Section 2: Toast Notifications -->
+			<h2 class="mt-8">Toast Notifications</h2>
+			<p>
+				Clicking this button will send a request to the server. The server will respond with a special
+				<code>HX-Trigger</code> header to show a toast, without returning any HTML.
+			</p>
+
+			<div class="p-4 border rounded-lg flex gap-4">
+				<button
+					class="btn btn-success"
+					hx-post="/ui-lab/show-toast"
+					hx-vals='{"type": "success", "message": "Settings saved successfully!"}'
+				>
+					Show Success Toast
+				</button>
+				<button
+					class="btn btn-error"
+					hx-post="/ui-lab/show-toast"
+					hx-vals='{"type": "error", "message": "Failed to delete file."}'
+				>
+					Show Error Toast
+				</button>
+			</div>
+		</div>
+	}
+}

@@ -1,0 +1,14 @@
+package feedback
+
+templ Modal(id string) {
+    <dialog id={ id } class="modal">
+        <div class="modal-box w-11/12 max-w-2xl">
+            // 使用 { children... } 插槽
+            // 这意味着任何在 <@feedback.Modal> 标签内部的内容，都会被渲染到这里
+            { children... }
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+}

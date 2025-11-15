@@ -1,0 +1,40 @@
+package sections
+import    "gotth/view/layouts"
+
+templ SseExample() {
+    @layouts.App("UI Lab: Real-time Updates (SSE)") {
+        <div class="prose max-w-4xl">
+            <h1>Real-time Updates with Server-Sent Events (SSE)</h1>
+            <div
+                class="mt-8 p-8 border rounded-lg text-center bg-base-100"
+                hx-ext="sse"
+                sse-connect="/sse-stream"
+                sse-swap="message"
+            >
+                <div id="connection-status" class="mb-4">
+                    <span class="text-yellow-500">Connecting...</span>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Live Counter:</h2>
+                <div 
+                    class="text-6xl font-mono text-primary"
+                >
+                    0
+                </div>
+            </div>
+        </div>
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const status = document.getElementById('connection-status');
+            
+            document.body.addEventListener('sse:open', function() {
+                status.innerHTML = '<span class="text-green-500">Connected</span>';
+            });
+            
+            document.body.addEventListener('sse:error', function() {
+                status.innerHTML = '<span class="text-red-500">Connection lost. Reconnecting...</span>';
+            });
+        });
+    </script>
+}

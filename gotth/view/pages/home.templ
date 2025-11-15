@@ -1,0 +1,19 @@
+package pages
+
+import "gotth/view/layouts" 
+
+templ Home(name string) {
+	@layouts.Base(name) {
+		<div class="hero min-h-screen bg-base-200">
+			<div class="hero-content text-center">
+				<div class="max-w-md">
+					<h1 class="text-5xl font-bold">Hello there 👋</h1>
+					<p class="py-6">
+						Welcome to your new app: <span class="font-bold">{ name }</span>
+					</p>
+					<button class="btn btn-primary">Get Started</button>
+				</div>
+			</div>
+		</div>
+	}
+}
